@@ -4,3 +4,6 @@ description: A Helm chart for Kubernetes
 name: arpa
 type: application
 version: 0.1.0
+maintainers:
+  - name: xom4ek
+    email: aleksei.lazarev@p2p.org
