@@ -12,7 +12,7 @@ pvc:
 imagePullSecrets: []
 service:
   annotations: {}
-  type: LoadBalancer ## Need for getting address and set into config
+  type: LoadBalancer
   ports:
     - name: node-api
       port: 8080
