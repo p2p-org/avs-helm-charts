@@ -1,0 +1,131 @@
+configs:
+  # Configuration file for the operator
+  worker-conf.toml: |
+
+    [worker]
+    data_dir = "/app/data/tmp"
+    instance_type = "medium"
+
+    [avs]
+    gateway_url = "ws://gateway.STAGE-distributed-query.STAGE.distributed-query.io:80"
+    issuer = "lagrange"
+    worker_id = "YOURWORKERID"
+
+    [public_params]
+    dir = "/app/data/zkmr_params"
+    url = "https://distributed-query-public-"
+
+    [public_params.preprocessing_params]
+    file = "STORAGE_PREPROCESS/PUBLIC_PARAMS"
+
+    [public_params.query2_params]
+    file = "STORAGE_QUERY2/public_params"
+
+    [public_params.groth16_assets]
+    circuit_file = "STORAGE_QUERY2/groth16_assets/circuit.bin"
+    r1cs_file = "STORAGE_QUERY2/groth16_assets/r1cs.bin"
+    pk_file = "STORAGE_QUERY2/groth16_assets/pk.bin"
+
+    [prometheus]
+    port = 9090
+    # some configs via file
+
+node:
+  # Configuration for the node container image
+  image:
+    repository: lagrangelabs/worker
+    pullPolicy: Always
+    tag: "holesky"
+
+  # Ports to expose from the node container
+  ports:
+    - name: metrics
+      containerPort: 9090
+      protocol: TCP
+
+  # Resource limits and requests for the node container
+  resources: {}
+    # Example resource limits and requests
+    # limits:
+    #   cpu: 4
+    #   memory: 4Gi
+    # requests:
+    #   cpu: 2
+    #   memory: 4Gi
+
+  # Environment variables for the node container
+  volumeMounts:
+    - name: ecdsa-key
+      mountPath: /app/operator_keys/ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: lagrange
+      mountPath: /app/data/
+  env:
+    - name: RPC_URL
+      value: https://rpc-url
+    - name: NETWORK
+      value: holesky
+    - name: AVS__LAGR_KEYSTORE
+      value: /app/operator_keys/ecdsa_key.json
+    - name: AVS__LAGR_PWD
+      valueFrom:
+        secretKeyRef:
+          name: YOURSECREWITHWALLET
+          key: ecdsa-private-key-password
+    - name: RUST_LOG
+      value: "info,worker=debug"
+    - name: PUBLIC_PARAMS__SKIP_STORE
+      value: false
+
+
+  # Arguments to pass to the node container
+  args:
+    # Example arguments for the node container
+    - --config=/app/config/worker-conf.toml
+
+
+
+# Node selector for the pod
+nodeSelector: {}
+
+# Tolerations for the pod
+tolerations: []
+
+# Affinity rules for the pod
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+
+  # Annotations to add to the service account
+  annotations: {}
+
+  # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Annotations to add to the pod
+podAnnotations: {}
+
+# Security context for the pod
+podSecurityContext: {}
+  # Example security context
+  # fsGroup: 2000
+
+# Security context for the container
+securityContext: {}
+  # Example security context
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Volumes for the pod
+volumes: []
+
+vmPodScrape:
+  # Enable or disable VM Pod Scraping
+  enabled: true

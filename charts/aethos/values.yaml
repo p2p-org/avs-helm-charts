@@ -1,0 +1,130 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+labels: {}
+
+pvc:
+  size: 10Gi
+  storageClassName: ""
+  labesl: {}
+  annotations: {}
+imagePullSecrets: []
+service:
+  annotations: {}
+  type: LoadBalancer
+  ports:
+    - name: node-api
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: task-server
+      port: 9010
+      protocol: TCP
+      targetPort: 9010
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+configs:
+  operator.yaml: |
+
+    environment: production
+    eth_rpc_url: https://lb.drpc.org/ogrpc?network=ethereum
+    avs_service_manager_address: 0xdE93E0dA148e1919bb7f33cd8847F96e45791210
+    node_eigen_api_server_host_and_port: 0.0.0.0:8080
+    eigen_metrics_ip_port_address: 0.0.0.0:9090
+    node_task_server_host_and_port: 0.0.0.0:9010
+    aggregator_server_ip_port_address: holesky.task.aethos.network:50051
+
+# register:
+#   image:
+#     repository: ghcr.io/aethosnetwork/operator
+#     pullPolicy: Always
+#     tag: "latest"
+#   args:
+#     - --config=/app/config/operator.yaml
+#     - register-operator-with-avs
+
+node:
+  volumeMounts: []
+  image:
+    repository: ghcr.io/aethosnetwork/operator
+    pullPolicy: Always
+    tag: "latest"
+  ports:
+    - name: node-api
+      containerPort: 8080
+      protocol: TCP
+    - name: metrics
+      containerPort: 9090
+      protocol: TCP
+    - name: task-server
+      containerPort: 9010
+      protocol: TCP
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 2
+      memory: 8Gi
+  env: []
+  args:
+    - start
+    - --config=/app/config/operator.yaml
+  readinessProbe:
+    httpGet:
+      path: /metrics
+      port: 9090
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+  # livenessProbe:
+  #   httpGet:
+  #     path: /metrics
+  #     port: 9090
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+volumes: []
+vmPodScrape:
+  enabled: true

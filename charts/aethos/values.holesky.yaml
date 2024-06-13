@@ -1,0 +1,53 @@
+node:
+  volumeMounts:
+    - name: ecdsa-key
+      mountPath: /app/operator_keys/ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: aethos
+      mountPath: /app/data/
+  env:
+    - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
+      value: "/app/operator_keys/ecdsa_key.json"
+    - name: OPERATOR_ID
+      value: $YOU_OPERATOR_ID ## Fill your operator ID
+    - name: AETHOS_SIGNING_PRIVATE_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: YOURSECREWITHWALLET
+          key: ecdsa-private-key-password
+    - name: NODE_TASK_SERVER_HOST_AND_PORT_TO_BROADCAST
+      value: 127.0.0.1:9010 ## Your External IP address for access to aethos node
+    - name: ETH_RPC_URL
+      value: https://lb.drpc.org/ogrpc?network=holesky
+
+serviceAccount:
+  create: false
+  name: aethos
+
+volumes:
+  - name: ecdsa-key
+    secret:
+      secretName: YOURSECREWITHWALLET
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: aethos
+    persistentVolumeClaim:
+      claimName: aethos
+configs:
+  ## Need double check after changes
+  operator.yaml: |
+
+    environment: production
+    avs_service_manager_address: 0xdE93E0dA148e1919bb7f33cd8847F96e45791210
+    avs_directory_address: 0x055733000064333CaDDbC92763c58BF0192fFeBf
+    node_eigen_api_server_host_and_port: 0.0.0.0:8080
+    eigen_metrics_ip_port_address: 0.0.0.0:9090
+    node_task_server_host_and_port: 0.0.0.0:9010
+    aggregator_server_ip_port_address: holesky.task.aethos.network:50051
+    # db path
+    db_path: /app/data/
+
+    # enable log colors
+    enable_log_color: true

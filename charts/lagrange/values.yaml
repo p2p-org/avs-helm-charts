@@ -1,0 +1,212 @@
+# Optionally override the name of the chart
+nameOverride: ""
+
+# Optionally override the full name of the chart
+fullnameOverride: ""
+
+# Number of replicas to deploy
+replicaCount: 1
+
+# Additional labels to add to resources
+labels: {}
+
+# Secrets for pulling images from a private registry
+imagePullSecrets: []
+
+service:
+  # Annotations to add to the service
+  annotations: {}
+
+  # Type of service to create
+  type: ClusterIP
+
+  # List of ports to expose from the service
+  ports:
+    # Example port configuration for metrics service
+    - name: metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+
+    # Example port configuration for node-api service
+    # - name: node-api
+    #   port: 9010
+    #   protocol: TCP
+    #   targetPort: 9010
+
+ingress:
+  # Annotations to add to the ingress
+  annotations: {}
+
+  # Enable or disable the ingress
+  enabled: false
+
+  # Hostname for the ingress
+  host: example.com
+
+configs:
+  # Configuration file for the operator
+  operator.yaml: |
+
+    [worker]
+    data_dir = "/app/data"
+    instance_type = "medium"
+
+    [avs]
+    gateway_url = "ws://gateway..io:80"
+    issuer = "lagrange"
+    worker_id = "p2p-worker"
+
+    [public_params]
+    dir = "/zkmr_params"
+    url = "https://distributed-.amazonaws.com"
+
+    [public_params.preprocessing_params]
+    file = "STORAGE_PREPROCESS/PUBLIC_PARAMS"
+
+    [public_params.query2_params]
+    file = "STORAGE_QUERY2/public_params"
+
+    [public_params.groth16_assets]
+    circuit_file = "STORAGE_QUERY2/groth16_assets/circuit.bin"
+    r1cs_file = "STORAGE_QUERY2/groth16_assets/r1cs.bin"
+    pk_file = "STORAGE_QUERY2/groth16_assets/pk.bin"
+
+    [prometheus]
+    port = 9090
+
+register:
+  # Enable or disable the register container
+  enabled: false
+
+  # Configuration for the register container image
+  image:
+    # Image registry for the register container
+    repository: <IMAGE_REGISTRY>
+
+    # Image pull policy for the register container
+    pullPolicy: Always
+
+    # Image tag for the register container
+    tag: "<IMAGE_TAG>"
+
+  # Arguments to pass to the register container
+  args:
+    - --config=/app/config/worker-conf.toml
+pvc:
+  size: 30Gi
+  storageClassName: default
+  annotations: {}
+  labels: {}
+node:
+  # Volume mounts for the node container
+  volumeMounts: []
+
+  # Configuration for the node container image
+  image:
+    # Image registry for the node container
+    repository: <IMAGE_REGISTRY>
+
+    # Image pull policy for the node container
+    pullPolicy: Always
+
+    # Image tag for the node container
+    tag: "<IMAGE_TAG>"
+
+  # Ports to expose from the node container
+  ports: []
+    # Example port configuration for node-api container
+    # - name: node-api
+    #   containerPort: 9010
+    #   protocol: TCP
+    # Example port configuration for metrics container
+    # - name: metrics
+    #   containerPort: 9091
+    #   protocol: TCP
+
+  # Resource limits and requests for the node container
+  resources: {}
+    # Example resource limits and requests
+    # limits:
+    #   cpu: 4
+    #   memory: 4Gi
+    # requests:
+    #   cpu: 2
+    #   memory: 4Gi
+
+  # Environment variables for the node container
+  env: []
+
+  # Arguments to pass to the node container
+  args: []
+    # Example arguments for the node container
+    # - --config=/app/config/operator.yaml
+    # - start-operator
+
+  # Readiness probe for the node container
+  readinessProbe: {}
+    # Example HTTP readiness probe
+    # httpGet:
+    #   path: /metrics
+    #   port: 9091
+    # initialDelaySeconds: 30
+    # periodSeconds: 10
+    # timeoutSeconds: 3
+    # failureThreshold: 3
+    # successThreshold: 1
+
+  # Liveness probe for the node container
+  livenessProbe: {}
+    # Example HTTP liveness probe
+    # httpGet:
+    #   path: /metrics
+    #   port: 9090
+    # initialDelaySeconds: 1200
+    # periodSeconds: 30
+    # timeoutSeconds: 3
+    # failureThreshold: 2
+    # successThreshold: 1
+
+# Node selector for the pod
+nodeSelector: {}
+
+# Tolerations for the pod
+tolerations: []
+
+# Affinity rules for the pod
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+
+  # Annotations to add to the service account
+  annotations: {}
+
+  # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# Annotations to add to the pod
+podAnnotations: {}
+
+# Security context for the pod
+podSecurityContext: {}
+  # Example security context
+  # fsGroup: 2000
+
+# Security context for the container
+securityContext: {}
+  # Example security context
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Volumes for the pod
+volumes: []
+
+vmPodScrape:
+  # Enable or disable VM Pod Scraping
+  enabled: true

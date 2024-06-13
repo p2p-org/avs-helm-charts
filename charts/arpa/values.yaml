@@ -1,0 +1,267 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+labels: {}
+
+pvc:
+  size: 10Gi
+  storageClassName: default
+  annotations: {}
+  labels: {}
+
+imagePullSecrets: []
+service:
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "nlb"
+    oci-network-load-balancer.oraclecloud.com/security-list-management-mode: "All"
+    oci.oraclecloud.com/security-rule-management-mode: "SL-All"
+  type: LoadBalancer
+  ports:
+    - name: node-api
+      port: 50061
+      protocol: TCP
+      targetPort: 50061
+    - name: metrics
+      port: 50081
+      protocol: TCP
+      targetPort: 50081
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+configs:
+  operator.yaml: |
+
+    node_committer_rpc_endpoint: "0.0.0.0:50061"
+    node_advertised_committer_rpc_endpoint: "143.47.183.136:50061"
+    node_management_rpc_endpoint: "0.0.0.0:50091"
+    node_management_rpc_token: "c3VwZXJzZWNyZXR0b2tlbg=="
+    node_statistics_http_endpoint: "0.0.0.0:50081"
+    provider_endpoint: "wss://lb.drpc.org/ogws?network=holesky"
+    chain_id: 17000
+    is_eigenlayer: true
+    controller_address: "0xbF53802722985b01c30C0C065738BcC776Ef5A69"
+    controller_relayer_address: "0x4A88f1d5D3ab086763df5967D7560148006eE8b4"
+    adapter_address: "0x88ab708e6A43eF8c7ab6a3f24B1F90f52a1682b8"
+    data_path: "/app/data/data1.sqlite"
+
+    logger:
+      context_logging: false
+      log_file_path: /app/data/log/1/
+      rolling_file_size: 10 gb
+
+    account:
+      keystore:
+          password: env
+          path: /app/operator_keys/ecdsa_key.json
+
+    listeners:
+      - l_type: Block
+        interval_millis: 0
+        use_jitter: true
+      - l_type: NewRandomnessTask
+        interval_millis: 0
+        use_jitter: true
+      - l_type: PreGrouping
+        interval_millis: 0
+        use_jitter: true
+      - l_type: PostCommitGrouping
+        interval_millis: 1000
+        use_jitter: true
+      - l_type: PostGrouping
+        interval_millis: 1000
+        use_jitter: true
+      - l_type: ReadyToHandleRandomnessTask
+        interval_millis: 1000
+        use_jitter: true
+      - l_type: RandomnessSignatureAggregation
+        interval_millis: 2000
+        use_jitter: false
+
+    time_limits:
+      block_time: 12
+      dkg_timeout_duration: 40
+      randomness_task_exclusive_window: 10
+      listener_interval_millis: 1000
+      dkg_wait_for_phase_interval_millis: 1000
+      provider_polling_interval_millis: 1000
+      provider_reset_descriptor:
+        interval_millis: 5000
+        max_attempts: 17280
+        use_jitter: false
+      contract_transaction_retry_descriptor:
+        base: 2
+        factor: 1000
+        max_attempts: 3
+        use_jitter: true
+      contract_view_retry_descriptor:
+        base: 2
+        factor: 500
+        max_attempts: 5
+        use_jitter: true
+      commit_partial_signature_retry_descriptor:
+        base: 2
+        factor: 1000
+        max_attempts: 5
+        use_jitter: false
+
+    relayed_chains:
+      - chain_id: 17069
+        description: "Redstone Garnet"
+        provider_endpoint: "wss://rpc.garnetchain.com"
+        controller_oracle_address: "0x901105C43C7f0e421b33c9D1DaA25f54076F6563"
+        adapter_address: "0x323488A9Ad7463081F109468B4E50a5084e91295"
+        listeners:
+          - l_type: Block
+            interval_millis: 0
+            use_jitter: true
+          - l_type: NewRandomnessTask
+            interval_millis: 0
+            use_jitter: true
+          - l_type: ReadyToHandleRandomnessTask
+            interval_millis: 1000
+            use_jitter: true
+          - l_type: RandomnessSignatureAggregation
+            interval_millis: 2000
+            use_jitter: false
+        time_limits:
+          block_time: 2
+          randomness_task_exclusive_window: 10
+          listener_interval_millis: 1000
+          provider_polling_interval_millis: 1000
+          provider_reset_descriptor:
+            interval_millis: 5000
+            max_attempts: 17280
+            use_jitter: false
+          contract_transaction_retry_descriptor:
+            base: 2
+            factor: 1000
+            max_attempts: 3
+            use_jitter: true
+          contract_view_retry_descriptor:
+            base: 2
+            factor: 500
+            max_attempts: 5
+            use_jitter: true
+          commit_partial_signature_retry_descriptor:
+            base: 2
+            factor: 1000
+            max_attempts: 5
+            use_jitter: false
+
+
+# register:
+#   image:
+#     repository: ghcr.io/arpa-network/node-client
+#     pullPolicy: Always
+#     tag: "eigenlayer"
+#   args:
+#     - --config=/app/config/operator.yaml
+#     - register-operator-with-avs
+
+cloudwatch:
+  enabled: false
+  volumeMounts: []
+  image:
+    repository: ghcr.io/arpa-network/node-client
+    pullPolicy: Always
+    tag: "latest"
+  resources: {}
+  env: []
+  command:
+    - /opt/aws/amazon-cloudwatch-agent/bin/start-amazon-cloudwatch-agent
+  args: []
+  # readinessProbe:
+  #   tcpSocket:
+  #     port: 50081
+  #   initialDelaySeconds: 10
+  #   periodSeconds: 5
+  #   timeoutSeconds: 1
+  #   successThreshold: 1
+  #   failureThreshold: 3
+  # livenessProbe:
+  #   httpGet:
+  #     path: /metrics
+  #     port: 50081
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+node:
+  volumeMounts: []
+  image:
+    repository: ghcr.io/arpa-network/node-client
+    pullPolicy: Always
+    tag: "latest"
+  ports:
+    - name: node-api
+      containerPort: 50061
+      protocol: TCP
+    - name: metrics
+      containerPort: 50081
+      protocol: TCP
+  resources:
+    limits:
+      cpu: 4
+      memory: 4Gi
+    requests:
+      cpu: 2
+      memory: 4Gi
+  env: []
+  command:
+    - /app/node-client
+  args:
+    - -c=/app/config/operator.yaml
+  readinessProbe:
+    tcpSocket:
+      port: 50081
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+  # livenessProbe:
+  #   httpGet:
+  #     path: /metrics
+  #     port: 50081
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+volumes: []
+vmPodScrape:
+  enabled: false
