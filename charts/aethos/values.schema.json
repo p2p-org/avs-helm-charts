@@ -170,23 +170,38 @@
             },
             "type": "object"
         },
+        "register": {
+            "properties": {
+                "args": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "image": {
+                    "properties": {
+                        "pullPolicy": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
         "replicaCount": {
             "type": "integer"
         },
         "service": {
             "properties": {
                 "annotations": {
-                    "properties": {
-                        "oci-network-load-balancer.oraclecloud.com/security-list-management-mode": {
-                            "type": "string"
-                        },
-                        "oci.oraclecloud.com/load-balancer-type": {
-                            "type": "string"
-                        },
-                        "oci.oraclecloud.com/security-rule-management-mode": {
-                            "type": "string"
-                        }
-                    },
+                    "properties": {},
                     "type": "object"
                 },
                 "ports": {
