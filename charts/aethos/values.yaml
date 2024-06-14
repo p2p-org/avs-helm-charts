@@ -42,14 +42,14 @@ configs:
     node_task_server_host_and_port: 0.0.0.0:9010
     aggregator_server_ip_port_address: holesky.task.aethos.network:50051
 
-# register:
-#   image:
-#     repository: ghcr.io/aethosnetwork/operator
-#     pullPolicy: Always
-#     tag: "latest"
-#   args:
-#     - --config=/app/config/operator.yaml
-#     - register-operator-with-avs
+register:
+  image:
+    repository: ghcr.io/aethosnetwork/operator
+    pullPolicy: Always
+    tag: "latest"
+  args:
+    - register
+    - --config=/app/config/operator.yaml
 
 node:
   volumeMounts: []
