@@ -3,9 +3,9 @@ entries:
   aethos:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-06-18T09:56:38.08743724Z"
+    created: "2024-06-18T11:26:11.871925708Z"
     description: A Helm chart for Kubernetes
-    digest: efc339196d363b276aee2c04b13a4a3d55e400a3a110fcd55d0aa2b937946cf1
+    digest: c49d54458a1efcb0590ae214b2ed99245739546d3b80e2c0abb476cce7bc390b
     maintainers:
     - email: aleksei.lazarev@p2p.org
       name: xom4ek
@@ -43,9 +43,9 @@ entries:
   arpa:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-06-18T09:56:38.08819543Z"
+    created: "2024-06-18T11:26:11.872729505Z"
     description: A Helm chart for Kubernetes
-    digest: e6ef97acbcc97829a373dba2405f4100d5215eedf73eba5db84fab409c0c834d
+    digest: b8c3365c3e3caff9ee34353641b1ba59c013458bcd34b32dc9e9aa313e69f0b1
     maintainers:
     - email: aleksei.lazarev@p2p.org
       name: xom4ek
@@ -70,9 +70,9 @@ entries:
   lagrange:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-06-18T09:56:38.088721816Z"
+    created: "2024-06-18T11:26:11.873305195Z"
     description: A Helm chart for Kubernetes
-    digest: 8385fae0a8e42633a8a7e5a08c5eb3b1f555575e066263346060a12987f170b0
+    digest: 639a5e97be9a5fed3cd693866e5559d17be015386892697552b600f7ff7e9606
     maintainers:
     - email: aleksei.lazarev@p2p.org
       name: xom4ek
@@ -95,9 +95,9 @@ entries:
   openoracle:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-06-18T09:56:38.089713844Z"
+    created: "2024-06-18T11:26:11.87382534Z"
     description: A Helm chart for Kubernetes
-    digest: 370e995aee759e03079f40d7c540a859c8d1e8f7164d4a3d32cbbe0445853e2d
+    digest: eb6561297f3079fdff97bee6954c92a28d25036f03aea87c26f4ba110b299432
     maintainers:
     - email: aleksei.lazarev@p2p.org
       name: xom4ek
@@ -106,4 +106,4 @@ entries:
     urls:
     - https://p2p-org.github.io/avs-helm-charts/openoracle-0.1.0.tgz
     version: 0.1.0
-generated: "2024-06-18T09:56:38.08600516Z"
+generated: "2024-06-18T11:26:11.871154332Z"
