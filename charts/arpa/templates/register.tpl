@@ -1,23 +1,23 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "aethos.fullname" . }}-register-job
+  name: {{ include "arpa.fullname" . }}-register-job
   labels:
-    {{- include "aethosRegister.labels" . | nindent 4 }}
+    {{- include "arpaRegister.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": "post-install"
 spec:
   template:
     metadata:
       labels:
-        {{- include "aethosRegister.labels" . | nindent 8 }}
+        {{- include "arpaRegister.labels" . | nindent 8 }}
     spec:
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app: {{ include "aethos.fullname" . }}
+                app: {{ include "arpa.fullname" . }}
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: register
@@ -34,5 +34,5 @@ spec:
         {{- toYaml .Values.volumes | nindent 8 }}
         - name: config
           configMap:
-            name: {{ include "aethos.fullname" . }}-config
+            name: {{ include "arpa.fullname" . }}-config
   backoffLimit: 2

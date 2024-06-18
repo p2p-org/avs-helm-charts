@@ -26,6 +26,19 @@ helm repo add p2p-avs https://p2p-org.github.io/avs-helm-charts/
 helm upgrade -i arpa p2p-avs/arpa -f values.$NETWORK.yaml
 ```
 
+### Registration
+
+When you install 
+
+## Need login to job and make that
+
+```sh
+kubectl get pods #Find job for registration
+kubectl exec -it $POD_JOB_NAME -- sh
+node-shell --config-path=/app/config/operator.yaml
+egister-as-eigenlayer-operator /app/operator_keys/ecdsa_key.json $ARPA_NODE_ACCOUNT_KEYSTORE_PASSWORD
+```
+
 ## Configuration
 
 The following table lists the configurable parameters of the ARPA Network Node chart and their default values.
