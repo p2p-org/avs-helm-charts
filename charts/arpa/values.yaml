@@ -152,14 +152,22 @@ configs:
             use_jitter: false
 
 
-# register:
-#   image:
-#     repository: ghcr.io/arpa-network/node-client
-#     pullPolicy: Always
-#     tag: "eigenlayer"
-#   args:
-#     - --config=/app/config/operator.yaml
-#     - register-operator-with-avs
+register:
+  image:
+    repository: ghcr.io/arpa-network/node-shell
+    pullPolicy: Always
+    tag: "latest"
+  command:
+    - sleep
+  args:
+    - "360000"
+
+
+## Need login to job and make that
+
+# node-shell --config-path=/app/config/operator.yaml
+
+# egister-as-eigenlayer-operator /app/operator_keys/ecdsa_key.json $ARPA_NODE_ACCOUNT_KEYSTORE_PASSWORD
 
 cloudwatch:
   enabled: false

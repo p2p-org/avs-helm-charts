@@ -8,6 +8,9 @@ node:
       readOnly: true
     - name: arpa
       mountPath: /app/data/
+    - name: config
+      mountPath: /app/config/operator.yaml
+      subPath: operator.yaml
   env:
     - name: ARPA_NODE_ACCOUNT_KEYSTORE_PASSWORD
       valueFrom:

@@ -6,6 +6,9 @@ node:
       readOnly: true
     - name: aethos
       mountPath: /app/data/
+    - name: config
+      mountPath: /app/config/operator.yaml
+      subPath: operator.yaml
   env:
     - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
       value: "/app/operator_keys/ecdsa_key.json"
