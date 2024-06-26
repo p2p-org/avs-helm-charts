@@ -26,9 +26,9 @@ node:
       value: 0x055733000064333CaDDbC92763c58BF0192fFeBf
 
     - name: L1_CHAIN
-      value: 17000
+      value: "17000"
     - name: L2_CHAIN
-      value: 80002
+      value: "80002"
 
     - name: PINATA_API_KEY
       value: c852ce6f177548614e4f
@@ -59,29 +59,29 @@ node:
       value: 97a64de0fb18532d4ce56fb35b730aedec993032b533f783b04c9175d465d9bf
 
     - name: APP_ID
-      value: 1234
+      value: "1234"
 
     - name: OTHENTIC_CLIENT_RPC_ADDRESS
       value: http://34.133.156.140:8545
     - name: OTHENTIC_CLIENT_IP
       value: 34.133.156.140
     - name: OTHENTIC_AGGREGATOR_P2P_PORT
-      value: 9876
+      value: "9876"
 
     - name: AVS_WEBAPI_URL
       value: http://localhost
 
     - name: AVS_WEBAPI_PORT
-      value: 4002
+      value: "4002"
     - name: PERFORMER_PORT
-      value: 3000
+      value: "3000"
     - name: AGGREGATOR_PORT
-      value: 8000
+      value: "8000"
 
     - name: ST_ETH_CONTRACT_ADDRESS
       value: 0x3F1c547b21f65e10480dE3ad8E19fAAC46C95034
     - name: ST_ETH_STAKE_AMOUNT
-      value: 10000000000000000
+      value: "10000000000000000"
     - name: EL_STRATEGY_MANAGER_ADDRESS
       value: 0xdfB5f6CE42aAA7830E94ECFCcAd411beF4d4D5b6
     - name: EL_DELETEGATION_MANAGER_ADDRESS
