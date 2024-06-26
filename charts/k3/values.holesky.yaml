@@ -15,7 +15,7 @@ node:
     - name: OPERATOR_TWITTER
       value:
     - name: PRIVATE_KEY
-      value: HELLOWORLD ## Your private key
+      value:  ## Your private key
 
 #If you're running a performer you need to expose http to the public (IP or a record)
     - name: PERFORMER_PUBLIC_URL

@@ -8,21 +8,12 @@ More information about k3 you can find here `https://docs.k3-labs.com/introducti
 - [k3 Helm Chart](#k3-helm-chart)
   - [Introduction](#introduction)
   - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
   - [Usage](#usage)
   - [Configuration](#configuration)
   - [Dependencies](#dependencies)
   - [Troubleshooting](#troubleshooting)
   - [Contributors](#contributors)
   - [License](#license)
-
-## Installation
-To install the chart with the release name `k3`:
-
-```sh
-helm repo add p2p-avs https://p2p-org.github.io/avs-helm-charts/
-helm install k3 p2p-avs/k3
-```
 
 ## Usage
 To use this chart, you can override default values by providing your own `values.yaml` file:
