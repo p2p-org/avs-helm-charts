@@ -48,6 +48,9 @@
         },
         "configs": {
             "properties": {
+                "default_linux_config.json": {
+                    "type": "string"
+                },
                 "operator.yaml": {
                     "type": "string"
                 }
@@ -193,6 +196,47 @@
         },
         "nodeSelector": {
             "properties": {},
+            "type": "object"
+        },
+        "nodeShell": {
+            "properties": {
+                "args": {
+                    "items": {
+                        "type": "number"
+                    },
+                    "type": "array"
+                },
+                "command": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "properties": {
+                        "pullPolicy": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "resources": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "volumeMounts": {
+                    "type": "array"
+                }
+            },
             "type": "object"
         },
         "pvc": {
