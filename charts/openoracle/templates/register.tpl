@@ -22,12 +22,11 @@ spec:
             {{- toYaml .Values.node.env | nindent 12 }}
           volumeMounts:
             {{- toYaml .Values.node.volumeMounts | nindent 12 }}
-            - name: config
-              mountPath: /app/config/operator.yaml
-              subPath: operator.yaml
       restartPolicy: Never
       volumes:
+        {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 8 }}
+        {{- end }}
         - name: config
           configMap:
             name: {{ include "openoracle.fullname" . }}-config

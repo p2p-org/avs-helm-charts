@@ -69,9 +69,6 @@ spec:
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
-            - name: config
-              mountPath: /app/config/operator.yaml
-              subPath: operator.yaml
           env:
             {{- toYaml .Values.node.env | nindent 12 }}
       volumes:

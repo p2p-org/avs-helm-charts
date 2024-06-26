@@ -3,7 +3,8 @@ appVersion: 0.1.0
 description: A Helm chart for Kubernetes
 name: openoracle
 type: application
-version: 0.1.0
+version: 0.1.1
 maintainers:
   - name: xom4ek
     email: aleksei.lazarev@p2p.org
+icon: https://storage.googleapis.com/stakingrewards-static/images/assets/production/openlayer_logo.png?v=1715247060260
