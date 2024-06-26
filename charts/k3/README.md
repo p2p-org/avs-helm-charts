@@ -10,36 +10,28 @@ More information about k3 you can find here `https://docs.k3-labs.com/introducti
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Features](#features)
   - [Configuration](#configuration)
   - [Dependencies](#dependencies)
-  - [Examples](#examples)
   - [Troubleshooting](#troubleshooting)
   - [Contributors](#contributors)
   - [License](#license)
 
 ## Installation
-To install the chart with the release name `my-release`:
+To install the chart with the release name `k3`:
 
 ```sh
 helm repo add p2p-avs https://p2p-org.github.io/avs-helm-charts/
-helm install my-release p2p-avs/k3
+helm install k3 p2p-avs/k3
 ```
 
 ## Usage
 To use this chart, you can override default values by providing your own `values.yaml` file:
 
 ```sh
-helm install my-release p2p-avs/k3 -f values.yaml
+helm install k3 p2p-avs/k3 -f values.yaml
 ```
 
-## Features
-- Deployment of the `k3` application
-- Configurable service types and ports
-- Customizable ingress settings
-- Node-specific configurations and environment variables
-- Support for custom image repositories and tags
-- Probes for readiness checks
+Registration must be pass automatically via job register
 
 ## Configuration
 The following table lists the configurable parameters of the k3 chart and their default values.
@@ -67,36 +59,6 @@ The following table lists the configurable parameters of the k3 chart and their 
 
 ## Dependencies
 This chart depends on several Kubernetes resources and should be used in a Kubernetes cluster. Ensure that you have Kubernetes and Helm installed and configured in your environment.
-
-## Examples
-Here is an example of how to configure the `values.yaml` for your deployment:
-
-```yaml
-replicaCount: 2
-
-service:
-  type: LoadBalancer
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-
-ingress:
-  enabled: true
-  host: myapp.example.com
-
-node:
-  image:
-    repository: myrepo/myapp
-    tag: "1.0.0"
-  resources:
-    limits:
-      cpu: "2"
-      memory: "4Gi"
-    requests:
-      cpu: "1"
-      memory: "2Gi"
-```
 
 ## Troubleshooting
 If you encounter any issues during installation or usage, check the following:

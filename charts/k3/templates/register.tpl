@@ -12,13 +12,6 @@ spec:
       labels:
         {{- include "k3Register.labels" . | nindent 8 }}
     spec:
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                app: {{ include "k3.fullname" . }}
-            topologyKey: "kubernetes.io/hostname"
       containers:
         - name: register
           image: "{{ .Values.register.image.repository }}:{{ .Values.register.image.tag | default .Chart.AppVersion }}"
