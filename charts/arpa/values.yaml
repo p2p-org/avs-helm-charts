@@ -32,6 +32,40 @@ ingress:
   host: example.com
 
 configs:
+
+  default_linux_config.json: |
+
+    {
+        "agent": {
+                "run_as_user": "root",
+                "region": "us-east-1",
+                "mode": "onPremise"
+        },
+        "logs": {
+            "logs_collected": {
+                "files": {
+                    "collect_list": [
+                        {
+                                "file_path": "/app/data/log/1/node.log",
+                                "log_group_class": "STANDARD",
+                                "log_group_name": "arpa-network-logs",
+                                "log_stream_name": "YOUR_OPERATOR_ADDRES",
+                                "retention_in_days": -1
+                        },
+                        {
+                                "file_path": "/app/data/log/1/node_err.log",
+                                "log_group_class": "STANDARD",
+                                "log_group_name": "arpa-network-logs",
+                                "log_stream_name": "YOUR_OPERATOR_ADDRES",
+                                "retention_in_days": -1
+                        }
+                    ]
+                }
+            }
+        }
+    }
+
+
   operator.yaml: |
 
     node_committer_rpc_endpoint: "0.0.0.0:50061"
@@ -151,17 +185,18 @@ configs:
             max_attempts: 5
             use_jitter: false
 
-
-register:
+nodeShell:
+  enabled: true
+  volumeMounts: []
   image:
     repository: ghcr.io/arpa-network/node-shell
     pullPolicy: Always
     tag: "latest"
+  resources: {}
   command:
     - sleep
   args:
-    - "360000"
-
+    - infinity
 
 ## Need login to job and make that
 

@@ -36,6 +36,31 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - name: node-shell
+          {{- with .Values.nodeShell.command }}
+          command:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.nodeShell.args }}
+          args:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.nodeShell.image.repository }}:{{ .Values.nodeShell.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.nodeShell.image.pullPolicy }}
+          {{- if .Values.lifecycleHooks }}
+          lifecycle:
+          {{- toYaml .Values.nodeShell.lifecycleHooks | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.nodeShell.resources | nindent 12 }}
+          volumeMounts:
+          {{- with .Values.node.volumeMounts }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- toYaml .Values.node.env | nindent 12 }}
         - name: node
           {{- with .Values.node.command }}
           command:

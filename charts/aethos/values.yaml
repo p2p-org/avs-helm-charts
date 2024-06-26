@@ -33,14 +33,7 @@ ingress:
 
 configs:
   operator.yaml: |
-
-    environment: production
-    eth_rpc_url: https://lb.drpc.org/ogrpc?network=ethereum
-    avs_service_manager_address: 0xdE93E0dA148e1919bb7f33cd8847F96e45791210
-    node_eigen_api_server_host_and_port: 0.0.0.0:8080
-    eigen_metrics_ip_port_address: 0.0.0.0:9090
-    node_task_server_host_and_port: 0.0.0.0:9010
-    aggregator_server_ip_port_address: holesky.task.aethos.network:50051
+    https://github.com/AethosNetwork/aethos-operator
 
 register:
   image:

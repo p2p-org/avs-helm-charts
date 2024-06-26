@@ -3,7 +3,8 @@ appVersion: 0.1.0
 description: A Helm chart for Kubernetes
 name: k3
 type: application
-version: 0.1.0
+version: 0.1.1
 maintainers:
   - name: xom4ek
     email: aleksei.lazarev@p2p.org
+icon: https://avatars.githubusercontent.com/u/143101892?s=200&v=4

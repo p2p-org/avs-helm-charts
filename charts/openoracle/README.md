@@ -1,14 +1,15 @@
-# k3 Helm Chart
+# Openoracle Helm Chart
 
 ## Introduction
-This repository contains a Helm chart for Kubernetes, specifically for the AVS named "k3".   
-More information about k3 you can find here `https://docs.k3-labs.com/introduction/tech-documentation/operator-onboarding`
+This repository contains a Helm chart for Kubernetes, specifically for the AVS named "openoracle".   
+More information about openoracle you can find here [openoracle-configs](https://github.com/0xJomo/openoracle-configs).
 
 ## Table of Contents
-- [k3 Helm Chart](#k3-helm-chart)
+- [Openoracle Helm Chart](#openoracle-helm-chart)
   - [Introduction](#introduction)
   - [Table of Contents](#table-of-contents)
   - [Usage](#usage)
+    - [Steps to Follow:](#steps-to-follow)
   - [Configuration](#configuration)
   - [Dependencies](#dependencies)
   - [Troubleshooting](#troubleshooting)
@@ -19,13 +20,29 @@ More information about k3 you can find here `https://docs.k3-labs.com/introducti
 To use this chart, you can override default values by providing your own `values.yaml` file:
 
 ```sh
-helm install k3 p2p-avs/k3 -f values.yaml
+helm install openoracle p2p-avs/openoracle -f values.yaml
 ```
 
-Registration must be pass automatically via job register
+### Steps to Follow:
+1. Generate keys via the following URLs:
+   - [Eigenlayer Operator Installation Guide](https://docs.eigenlayer.xyz/eigenlayer/operator-guides/operator-installation)
+   - [Openoracle Configs](https://github.com/0xJomo/openoracle-configs)
+
+2. Create a secret in Kubernetes for any workflow you want. Example you can find in `./examples`
+
+3. Fill the placeholders in your `values.yaml` file:
+   - `YOUR_OPERATOR_ADDRESS`
+   - `YOUR_ECDSA_SIGN_KEY_SECRET`
+   - `YOUR_BLS_KEY_SECRET`
+   - `YOUR_ECDSA_KEY_SECRET`
+
+4. Run the following command to upgrade and install the chart:
+   ```sh
+   helm upgrade -i openoracle p2p-avs/openoracle -f values.yaml
+   ```
 
 ## Configuration
-The following table lists the configurable parameters of the k3 chart and their default values.
+The following table lists the configurable parameters of the openoracle chart and their default values.
 
 | Parameter                   | Description                                                   | Default                      |
 |-----------------------------|---------------------------------------------------------------|------------------------------|
@@ -34,7 +51,7 @@ The following table lists the configurable parameters of the k3 chart and their 
 | `service.ports`             | Service ports                                                 | `{...}`                      |
 | `ingress.enabled`           | Enable ingress                                                | `false`                      |
 | `ingress.host`              | Ingress host                                                  | `example.com`                |
-| `node.image.repository`     | Node image repository                                         | `k3official/k3-labs-avs-operator` |
+| `node.image.repository`     | Node image repository                                         | `openoracleofficial/openoracle-labs-avs-operator` |
 | `node.image.tag`            | Node image tag                                                | `latest`                     |
 | `node.image.pullPolicy`     | Image pull policy                                             | `Always`                     |
 | `node.resources.requests`   | CPU/Memory resource requests                                  | `2 CPU / 8Gi Memory`         |
@@ -43,7 +60,7 @@ The following table lists the configurable parameters of the k3 chart and their 
 | `serviceAccount.name`       | Name of the service account                                   | `""`                         |
 | `vmPodScrape.enabled`       | Enable VM Pod scraping                                        | `true`                       |
 | `register.enabled`          | Enable register functionality                                 | `true`                       |
-| `register.image.repository` | Register image repository                                     | `k3official/k3-labs-avs-operator` |
+| `register.image.repository` | Register image repository                                     | `openoracleofficial/openoracle-labs-avs-operator` |
 | `register.image.tag`        | Register image tag                                            | `latest`                     |
 | `register.image.pullPolicy` | Register image pull policy                                    | `Always`                     |
 | `configs.operator.yaml`     | Operator configuration                                        | `empty`                      |

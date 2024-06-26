@@ -9,11 +9,14 @@ node:
     - name: config
       mountPath: /app/config/operator.yaml
       subPath: operator.yaml
+    - name: config
+      mountPath: /opt/aws/amazon-cloudwatch-agent/bin/default_linux_config.json
+      subPath: default_linux_config.json
   env:
     - name: ARPA_NODE_ACCOUNT_KEYSTORE_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: YOURSECREWITHWALLET
+          name: YOUR_ECDSA_KEY_SECRET
           key: ecdsa-private-key-password
 
 cloudwatch:
@@ -35,7 +38,7 @@ serviceAccount:
 volumes:
   - name: ecdsa-key
     secret:
-      secretName: YOURSECREWITHWALLET
+      secretName: YOUR_ECDSA_KEY_SECRET
       items:
         - key: ecdsa-private-key
           path: ecdsa_key.json
@@ -60,14 +63,14 @@ configs:
                                 "file_path": "/app/data/log/1/node.log",
                                 "log_group_class": "STANDARD",
                                 "log_group_name": "arpa-network-logs",
-                                "log_stream_name": "YOURADDRESS",
+                                "log_stream_name": "YOUR_OPERATOR_ADDRES",
                                 "retention_in_days": -1
                         },
                         {
                                 "file_path": "/app/data/log/1/node_err.log",
                                 "log_group_class": "STANDARD",
                                 "log_group_name": "arpa-network-logs",
-                                "log_stream_name": "YOURADDRESS",
+                                "log_stream_name": "YOUR_OPERATOR_ADDRES",
                                 "retention_in_days": -1
                         }
                     ]
@@ -79,11 +82,11 @@ configs:
   operator.yaml: |
 
     node_committer_rpc_endpoint: "0.0.0.0:50061"
-    node_advertised_committer_rpc_endpoint: "YOUREXTERNALADDRESS:50061"
+    node_advertised_committer_rpc_endpoint: "YOUR_EXTERNAL_ADDRESS:50061"
     node_management_rpc_endpoint: "0.0.0.0:50091"
-    node_management_rpc_token: "c3VwZXJzZWNyZXR0b2tlbg=="
+    node_management_rpc_token: "c3VwZXJzZWNyZXR0b2tlbg==" # Change me
     node_statistics_http_endpoint: "0.0.0.0:50081"
-    provider_endpoint: "wss://lb.drpc.org/ogws?network=holesky"
+    provider_endpoint: "wss://lb.drpc.org/ogws?network=holesky" # Use your rpc
     chain_id: 17000
     is_eigenlayer: true
     controller_address: "0xbF53802722985b01c30C0C065738BcC776Ef5A69"

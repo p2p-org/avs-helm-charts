@@ -5,52 +5,8 @@
             "properties": {},
             "type": "object"
         },
-        "cloudwatch": {
-            "properties": {
-                "args": {
-                    "type": "array"
-                },
-                "command": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "env": {
-                    "type": "array"
-                },
-                "image": {
-                    "properties": {
-                        "pullPolicy": {
-                            "type": "string"
-                        },
-                        "repository": {
-                            "type": "string"
-                        },
-                        "tag": {
-                            "type": "string"
-                        }
-                    },
-                    "type": "object"
-                },
-                "resources": {
-                    "properties": {},
-                    "type": "object"
-                },
-                "volumeMounts": {
-                    "type": "array"
-                }
-            },
-            "type": "object"
-        },
         "configs": {
             "properties": {
-                "default_linux_config.json": {
-                    "type": "string"
-                },
                 "operator.yaml": {
                     "type": "string"
                 }
@@ -88,12 +44,6 @@
         "node": {
             "properties": {
                 "args": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "command": {
                     "items": {
                         "type": "string"
                     },
@@ -138,6 +88,17 @@
                         "failureThreshold": {
                             "type": "integer"
                         },
+                        "httpGet": {
+                            "properties": {
+                                "path": {
+                                    "type": "string"
+                                },
+                                "port": {
+                                    "type": "integer"
+                                }
+                            },
+                            "type": "object"
+                        },
                         "initialDelaySeconds": {
                             "type": "integer"
                         },
@@ -146,14 +107,6 @@
                         },
                         "successThreshold": {
                             "type": "integer"
-                        },
-                        "tcpSocket": {
-                            "properties": {
-                                "port": {
-                                    "type": "integer"
-                                }
-                            },
-                            "type": "object"
                         },
                         "timeoutSeconds": {
                             "type": "integer"
@@ -198,22 +151,13 @@
             "properties": {},
             "type": "object"
         },
-        "nodeShell": {
+        "register": {
             "properties": {
                 "args": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
-                },
-                "command": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "enabled": {
-                    "type": "boolean"
                 },
                 "image": {
                     "properties": {
@@ -228,32 +172,6 @@
                         }
                     },
                     "type": "object"
-                },
-                "resources": {
-                    "properties": {},
-                    "type": "object"
-                },
-                "volumeMounts": {
-                    "type": "array"
-                }
-            },
-            "type": "object"
-        },
-        "pvc": {
-            "properties": {
-                "annotations": {
-                    "properties": {},
-                    "type": "object"
-                },
-                "labels": {
-                    "properties": {},
-                    "type": "object"
-                },
-                "size": {
-                    "type": "string"
-                },
-                "storageClassName": {
-                    "type": "string"
                 }
             },
             "type": "object"
@@ -264,17 +182,7 @@
         "service": {
             "properties": {
                 "annotations": {
-                    "properties": {
-                        "oci-network-load-balancer.oraclecloud.com/security-list-management-mode": {
-                            "type": "string"
-                        },
-                        "oci.oraclecloud.com/load-balancer-type": {
-                            "type": "string"
-                        },
-                        "oci.oraclecloud.com/security-rule-management-mode": {
-                            "type": "string"
-                        }
-                    },
+                    "properties": {},
                     "type": "object"
                 },
                 "ports": {

@@ -8,32 +8,47 @@ node:
       mountPath: /app/operator_keys/ecdsa_key.json
       subPath: ecdsa_key.json
       readOnly: true
+    - name: signer-ecdsa-key
+      mountPath: /app/operator_keys/signer_ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: config
+      mountPath: /app/config/operator.yaml
+      subPath: operator.yaml
+
   env:
     - name: BLS_PRIVATE_KEY_PATH
       value: "/app/operator_keys/bls_key.json"
     - name: ECDSA_PRIVATE_KEY_PATH
       value: "/app/operator_keys/ecdsa_key.json"
+    - name: ECDSA_SIGNER_PRIVATE_KEY_PATH
+      value: "/app/operator_keys/signer_ecdsa_key.json"
     - name: OPERATOR_ADDRESS
-      value: "YOUROPERATORADDRESS"
-    # - name: OPERATOR_ADDRESS
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: YOURSECREWITHWALLET
-    #       key: ecdsa-public-key
+      value: "YOUR_OPERATOR_ADDRES"
+    - name: OPERATOR_SIGNATURE_ADDRESS
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_SIGN_KEY_SECRET
+          key: ecdsa-public-key
+    - name: OPERATOR_SIGNER_ECDSA_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_SIGN_KEY_SECRET
+          key: ecdsa-private-key-password
     - name: OPERATOR_BLS_KEY_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: YOURWALLETSECRET
+          name: YOUR_BLS_KEY_SECRET
           key: bls-private-key-password
     - name: OPERATOR_ECDSA_KEY_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: YOURSECREWITHWALLET
+          name: YOUR_ECDSA_KEY_SECRET
           key: ecdsa-private-key-password
     - name: HTTP_RPC_URL
-      value: https://lb.drpc.org/ogrpc?network=holesky
+      value: https://lb.drpc.org/ogrpc?network=holesky # Set your rpc
     - name: WS_RPC_URL
-      value: wss://lb.drpc.org/ogrpc?network=holesky
+      value: wss://lb.drpc.org/ogrpc?network=holesky # Set your wss rpc
 
 serviceAccount:
   create: true
@@ -42,13 +57,19 @@ serviceAccount:
 volumes:
   - name: bls-key
     secret:
-      secretName: YOURSECREWITHWALLET
+      secretName: YOUR_BLS_KEY_SECRET
       items:
         - key: bls-private-key
           path: bls_key.json
   - name: ecdsa-key
     secret:
-      secretName: YOURSECREWITHWALLET
+      secretName: YOUR_ECDSA_KEY_SECRET
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: signer-ecdsa-key
+    secret:
+      secretName: YOUR_ECDSA_SIGN_KEY_SECRET
       items:
         - key: ecdsa-private-key
           path: ecdsa_key.json
@@ -67,7 +88,8 @@ configs:
     operator_state_retriever_address: 0x12ddeDbB47340e6702529197cB593204A4aFa318
 
     # address which the aggregator listens on for operator signed messages
-    aggregator_server_ip_port_address: https://us-central1-openoracle-de73b.cloudfunctions.net/backend_apis/api/report_result
+    aggregator_server_ip_port_address: https://us-central1-openoracle-de73b.cloudfunctions.net/backend_apis_holesky/api/report_result
+    price_config_server_ip_port_address: https://us-central1-openoracle-de73b.cloudfunctions.net/backend_apis/api/price_feed_config
     chain_name: eth
 
     # avs node spec compliance https://eigen.nethermind.io/docs/spec/intro
@@ -75,6 +97,7 @@ configs:
     enable_metrics: true
     node_api_ip_port_address: 0.0.0.0:9010
     enable_node_api: true
+    health_ws_url: ws://oracle.openlayer.tech:3030/
 
     # we need to register the operator on startup when running the docker compose file
     # because unfortunately we cannot register the operator previously and save it in the anvil json file
@@ -82,3 +105,6 @@ configs:
     # the registered operator, it's blspubkey registering event with the compendium is not present anymore,
     # and so the aggregator can't find it.... very annoying
     register_operator_on_startup: true
+    chain_urls:
+      holesky: wss://holesky.gateway.tenderly.co/3Wiu0rFTyBrOesBPrQnxOw # Set your rpc
+      plumetest: wss://plume-testnet.rpc.caldera.xyz/infra-partner-ws # Set your rpc

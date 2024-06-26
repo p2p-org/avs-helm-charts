@@ -4,25 +4,40 @@ node:
       mountPath: /app/operator_keys/ecdsa_key.json
       subPath: ecdsa_key.json
       readOnly: true
+    - name: signer-ecdsa-key
+      mountPath: /app/operator_keys/signer_ecdsa_key.json
     - name: aethos
       mountPath: /app/data/
     - name: config
       mountPath: /app/config/operator.yaml
       subPath: operator.yaml
   env:
-    - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
+    - name: REGISTRATION_PRIVATE_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_KEY_SECRET
+          key: ecdsa-private-key-password
+    - name: REGISTRATION_PRIVATE_KEY_STORE_PATH
       value: "/app/operator_keys/ecdsa_key.json"
+    - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
+      value: "/app/operator_keys/signer_ecdsa_key.json"
+    - name: AETHOS_SIGNING_ADDRESS
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_SIGN_KEY_SECRET
+          key: ecdsa-public-key
     - name: OPERATOR_ID
-      value: $YOU_OPERATOR_ID ## Fill your operator ID
+      value: YOUR_OPERATOR_ADDRES ## Fill your operator ID
     - name: AETHOS_SIGNING_PRIVATE_KEY_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: YOURSECREWITHWALLET
+          name: YOUR_ECDSA_KEY_SECRET
           key: ecdsa-private-key-password
     - name: NODE_TASK_SERVER_HOST_AND_PORT_TO_BROADCAST
-      value: 127.0.0.1:9010 ## Your External IP address for access to aethos node
+      value: YOUR_EXTERNAL_ADDRESS:9010 ## Your External IP address for access to aethos node
     - name: ETH_RPC_URL
       value: https://lb.drpc.org/ogrpc?network=ethereum ## Your eth rpc url
+
 serviceAccount:
   create: false
   name: aethos
@@ -30,7 +45,13 @@ serviceAccount:
 volumes:
   - name: ecdsa-key
     secret:
-      secretName: YOURSECREWITHWALLET
+      secretName: YOUR_ECDSA_KEY_SECRET
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: signer-ecdsa-key
+    secret:
+      secretName: YOUR_ECDSA_SIGN_KEY_SECRET
       items:
         - key: ecdsa-private-key
           path: ecdsa_key.json
@@ -41,13 +62,27 @@ configs:
   ## Need double check after changes
   operator.yaml: |
 
+    # this sets the logger level
     environment: production
-    avs_service_manager_address: 0xdE93E0dA148e1919bb7f33cd8847F96e45791210
-    avs_directory_address: 0x055733000064333CaDDbC92763c58BF0192fFeBf
+
+    # avs service manager proxy address
+    avs_service_manager_address: 0x07E26BF8060e33fA3771d88128b75493750515c1
+    # avs directory address (eigenlayer ethereum mainnet)
+    avs_directory_address: 0x135DDa560e946695d6f155dACaFC6f1F25C1F5AF
+
+
+    # avs node spec compliance https://eigen.nethermind.io/docs/spec/intro
     node_eigen_api_server_host_and_port: 0.0.0.0:8080
     eigen_metrics_ip_port_address: 0.0.0.0:9090
+
+    # grpc server for communication in between operator and aggregator
     node_task_server_host_and_port: 0.0.0.0:9010
-    aggregator_server_ip_port_address: holesky.task.aethos.network:50051
+
+    # grpc server on which the operator receives tasks
+
+    # address which the aggregator listens on for operator signed messages
+    aggregator_server_ip_port_address: task.aethos.network:50051
+
     # db path
     db_path: /app/data/
 
