@@ -95,17 +95,6 @@ entries:
     urls:
     - https://p2p-org.github.io/avs-helm-charts/lagrange-0.1.0.tgz
     version: 0.1.0
-  langrange:
-  - apiVersion: v2
-    appVersion: 0.1.0
-    created: "2024-06-18T09:56:38.089176197Z"
-    description: A Helm chart for Kubernetes
-    digest: f7d527c49729be4f0edf6955e2d8bcea375de2f900045e64410538fd366b1634
-    name: langrange
-    type: application
-    urls:
-    - https://p2p-org.github.io/avs-helm-charts/langrange-0.1.0.tgz
-    version: 0.1.0
   openoracle:
   - apiVersion: v2
     appVersion: 0.1.0
