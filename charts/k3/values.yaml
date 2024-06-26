@@ -1,0 +1,118 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+labels: {}
+
+imagePullSecrets: []
+service:
+  annotations: {}
+  type: ClusterIP
+  ports:
+    - name: node-api
+      port: 4002
+      protocol: TCP
+      targetPort: 4002
+    - name: performer
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+    - name: aggregator
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+configs:
+  operator.yaml: |
+    leave empty
+
+register:
+  enabled: true
+  image:
+    repository: k3official/k3-labs-avs-operator
+    pullPolicy: Always
+    tag: "latest"
+  args:
+    - register
+
+node:
+  volumeMounts: []
+  image:
+    repository: k3official/k3-labs-avs-operator
+    pullPolicy: Always
+    tag: "latest"
+  ports:
+    - name: node-api
+      containerPort: 4002
+      protocol: TCP
+    - name: performer
+      containerPort: 3000
+      protocol: TCP
+    - name: aggregator
+      containerPort: 8000
+      protocol: TCP
+  resources: {}
+    # limits:
+    #   cpu: 4
+    #   memory: 16Gi
+    # requests:
+    #   cpu: 2
+    #   memory: 8Gi
+  env: []
+  args:
+    - performer
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+  # livenessProbe:
+  #   httpGet:
+  #     path: /metrics
+  #     port: 9090
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+volumes: []
+vmPodScrape:
+  enabled: true

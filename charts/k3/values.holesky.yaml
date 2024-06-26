@@ -1,0 +1,105 @@
+node:
+  env:
+    - name: L1_RPC
+      value:  # Your Holesky RPC
+    - name: L2_RPC
+      value:  # Your AMOY RPC
+    - name: OPERATOR_NAME
+      value:
+    - name: OPERATOR_WEBSITE
+      value:
+    - name: OPERATOR_DESCRIPTION
+      value:
+    - name: OPERATOR_LOGO
+      value:
+    - name: OPERATOR_TWITTER
+      value:
+    - name: PRIVATE_KEY
+      value: HELLOWORLD ## Your private key
+
+#If you're running a performer you need to expose http to the public (IP or a record)
+    - name: PERFORMER_PUBLIC_URL
+      value: https://k3-holesky.el.p2p.world
+
+# Values below this line can be left by default
+    - name: EL_AVS_DIRECTORY
+      value: 0x055733000064333CaDDbC92763c58BF0192fFeBf
+
+    - name: L1_CHAIN
+      value: 17000
+    - name: L2_CHAIN
+      value: 80002
+
+    - name: PINATA_API_KEY
+      value: c852ce6f177548614e4f
+    - name: PINATA_SECRET_API_KEY
+      value: acbbdf0edf2650b9740f0f2bd3807c14661099a375144a160a5f324631b7b3e3
+
+    - name: TASK_PERFORMER
+      value: 0x3c7a1a9c769009D21fe2FCfb08c7334919F641fe
+
+
+    - name: ATTESTATION_CENTER_ADDRESS
+      value: 0x7D21435Ee9bE7113dB69dCd424b6e83a8C46287F
+    - name: OTHENTIC_REGISTRY_ADDRESS
+      value: 0x41994741eD86Ec48e9578d0f64839E3F546466Fa
+    - name: AVS_GOVERNANCE_ADDRESS
+      value: 0x85F8294AEc0B3dED6a7F1A1129F6F3a59fCAaD75
+
+    - name: IPFS_HOST
+      value: https://gateway.pinata.cloud/ipfs/
+    - name: IPFS_API
+      value: https://api.pinata.cloud
+    - name: IPFS_JWT
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJjZmYzYmE2Yy1mMGZmLTQ3MGUtOTc5Ni0xYmI5ZjZhNzlmNDAiLCJlbWFpbCI6Iml2YW4ucmVpZkBrMy1sYWJzLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjODUyY2U2ZjE3NzU0ODYxNGU0ZiIsInNjb3BlZEtleVNlY3JldCI6ImFjYmJkZjBlZGYyNjUwYjk3NDBmMGYyYmQzODA3YzE0NjYxMDk5YTM3NTE0NGExNjBhNWYzMjQ2MzFiN2IzZTMiLCJpYXQiOjE3MTc0MzM5MjZ9.z-wkmQoOb4U7VBDmY6mFQztpIYxafhbif8stNJBir5Q
+
+    - name: OTHENTIC_BOOTSTRAP_ID
+      value: 12D3KooWBNFG1QjuF3UKAKvqhdXcxh9iBmj88cM5eU2EK5Pa91KB
+    - name: OTHENTIC_BOOTSTRAP_SEED
+      value: 97a64de0fb18532d4ce56fb35b730aedec993032b533f783b04c9175d465d9bf
+
+    - name: APP_ID
+      value: 1234
+
+    - name: OTHENTIC_CLIENT_RPC_ADDRESS
+      value: http://34.133.156.140:8545
+    - name: OTHENTIC_CLIENT_IP
+      value: 34.133.156.140
+    - name: OTHENTIC_AGGREGATOR_P2P_PORT
+      value: 9876
+
+    - name: AVS_WEBAPI_URL
+      value: http://localhost
+
+    - name: AVS_WEBAPI_PORT
+      value: 4002
+    - name: PERFORMER_PORT
+      value: 3000
+    - name: AGGREGATOR_PORT
+      value: 8000
+
+    - name: ST_ETH_CONTRACT_ADDRESS
+      value: 0x3F1c547b21f65e10480dE3ad8E19fAAC46C95034
+    - name: ST_ETH_STAKE_AMOUNT
+      value: 10000000000000000
+    - name: EL_STRATEGY_MANAGER_ADDRESS
+      value: 0xdfB5f6CE42aAA7830E94ECFCcAd411beF4d4D5b6
+    - name: EL_DELETEGATION_MANAGER_ADDRESS
+      value: 0xA44151489861Fe9e3055d95adC98FbD462B948e7
+
+
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+serviceAccount:
+  create: false
+  name: k3
+
+volumes: []
+
+configs:
+  ## Need double check after changes
+  operator.yaml: |
+    empty
