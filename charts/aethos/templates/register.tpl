@@ -31,7 +31,9 @@ spec:
             {{- toYaml .Values.node.volumeMounts | nindent 12 }}
       restartPolicy: Never
       volumes:
+        {{- if .Values.volumes}}
         {{- toYaml .Values.volumes | nindent 8 }}
+        {{- end}}
         - name: config
           configMap:
             name: {{ include "aethos.fullname" . }}-config

@@ -4,25 +4,39 @@ node:
       mountPath: /app/operator_keys/ecdsa_key.json
       subPath: ecdsa_key.json
       readOnly: true
+    - name: signer-ecdsa-key
+      mountPath: /app/operator_keys/signer_ecdsa_key.json
     - name: aethos
       mountPath: /app/data/
     - name: config
       mountPath: /app/config/operator.yaml
       subPath: operator.yaml
   env:
-    - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
+    - name: REGISTRATION_PRIVATE_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_KEY_SECRET
+          key: ecdsa-private-key-password
+    - name: REGISTRATION_PRIVATE_KEY_STORE_PATH
       value: "/app/operator_keys/ecdsa_key.json"
+    - name: AETHOS_SIGNING_PRIVATE_KEY_STORE_PATH
+      value: "/app/operator_keys/signer_ecdsa_key.json"
+    - name: AETHOS_SIGNING_ADDRESS
+      valueFrom:
+        secretKeyRef:
+          name: YOUR_ECDSA_SIGN_KEY_SECRET
+          key: ecdsa-public-key
     - name: OPERATOR_ID
-      value: $YOU_OPERATOR_ID ## Fill your operator ID
+      value: YOUR_OPERATOR_ADDRES ## Fill your operator ID
     - name: AETHOS_SIGNING_PRIVATE_KEY_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: YOURSECREWITHWALLET
+          name: YOUR_ECDSA_KEY_SECRET
           key: ecdsa-private-key-password
     - name: NODE_TASK_SERVER_HOST_AND_PORT_TO_BROADCAST
-      value: 127.0.0.1:9010 ## Your External IP address for access to aethos node
+      value: YOUR_EXTERNAL_ADDRESS:9010 ## Your External IP address for access to aethos node
     - name: ETH_RPC_URL
-      value: https://lb.drpc.org/ogrpc?network=holesky
+      value: https://lb.drpc.org/ogrpc?network=holesky ## Your eth rpc url
 
 serviceAccount:
   create: false
@@ -31,7 +45,13 @@ serviceAccount:
 volumes:
   - name: ecdsa-key
     secret:
-      secretName: YOURSECREWITHWALLET
+      secretName: YOUR_ECDSA_KEY_SECRET
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: signer-ecdsa-key
+    secret:
+      secretName: YOUR_ECDSA_SIGN_KEY_SECRET
       items:
         - key: ecdsa-private-key
           path: ecdsa_key.json

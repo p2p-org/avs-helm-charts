@@ -3,7 +3,8 @@ appVersion: 0.1.0
 description: A Helm chart for Kubernetes
 name: aethos
 type: application
-version: 0.1.2
+version: 0.1.3
 maintainers:
   - name: xom4ek
     email: aleksei.lazarev@p2p.org
+icon: https://avatars.githubusercontent.com/u/148808805?s=200&v=4
