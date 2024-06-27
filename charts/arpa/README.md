@@ -1,6 +1,3 @@
-Sure, here's the updated `README.md` with the changes you requested:
-
-```markdown
 # Arpa Helm Chart
 
 ## Introduction
@@ -94,6 +91,3 @@ If you encounter any issues during installation or usage, check the following:
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
-```
-
-Feel free to ask if you need any further modifications!
