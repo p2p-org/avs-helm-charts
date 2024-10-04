@@ -97,6 +97,8 @@ busybox:
     pullPolicy: IfNotPresent
     tag: "1.28"
 node:
+  command: ""
+  args: ""
   envFrom: []
   env:
     - name: NODE_ECDSA_KEY_PASSWORD
