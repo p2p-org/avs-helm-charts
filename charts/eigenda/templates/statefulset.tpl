@@ -37,6 +37,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: node-shell
+          envFrom:
+            - configMapRef:
+                name: {{ include "eigenda.fullname" . }}-config
+          {{- with .Values.node.envFrom }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.nodeShell.command }}
           command:
           {{- toYaml . | nindent 12 }}
@@ -56,12 +62,26 @@ spec:
           resources:
             {{- toYaml .Values.nodeShell.resources | nindent 12 }}
           volumeMounts:
+            - name: eigenda-g1
+              mountPath: /app/g1
+            - name: eigenda-g2
+              mountPath: /app/g2
+            - name: eigenda-cache
+              mountPath: /app/cache
+            - name: eigenda-db
+              mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
             {{- toYaml .Values.node.env | nindent 12 }}
         - name: node
+          envFrom:
+            - configMapRef:
+                name: {{ include "eigenda.fullname" . }}-config
+          {{- with .Values.node.envFrom }}
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.node.command }}
           command:
           {{- toYaml . | nindent 12 }}
@@ -91,6 +111,14 @@ spec:
           resources:
             {{- toYaml .Values.node.resources | nindent 12 }}
           volumeMounts:
+            - name: eigenda-g1
+              mountPath: /app/g1
+            - name: eigenda-g2
+              mountPath: /app/g2
+            - name: eigenda-cache
+              mountPath: /app/cache
+            - name: eigenda-db
+              mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -106,6 +134,14 @@ spec:
               "if ! [ -f /app/g1/g1.point ]; then wget https://srs-mainnet.s3.amazonaws.com/kzg/g1.point --output-document=/app/g1/g1.point; fi",
             ]
           volumeMounts:
+            - name: eigenda-g1
+              mountPath: /app/g1
+            - name: eigenda-g2
+              mountPath: /app/g2
+            - name: eigenda-cache
+              mountPath: /app/cache
+            - name: eigenda-db
+              mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -118,12 +154,22 @@ spec:
               "if ! [ -f /app/g2/g2.point.powerOf2 ]; then wget https://srs-mainnet.s3.amazonaws.com/kzg/g2.point.powerOf2 --output-document=/app/g2/g2.point.powerOf2; fi",
             ]
           volumeMounts:
+            - name: eigenda-g1
+              mountPath: /app/g1
+            - name: eigenda-g2
+              mountPath: /app/g2
+            - name: eigenda-cache
+              mountPath: /app/cache
+            - name: eigenda-db
+              mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
         - name: eigenda-opt-in
           image: "{{ .Values.optIn.image.repository }}:{{ .Values.optIn.image.tag | default .Chart.AppVersion }}"
           envFrom:
+            - configMapRef:
+                name: {{ include "eigenda.fullname" . }}-config
           {{- with .Values.node.envFrom }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -138,12 +184,32 @@ spec:
               'if $NODE_OPT_IN; then nodeplugin --ecdsa-key-password $NODE_ECDSA_KEY_PASSWORD --bls-key-password $NODE_BLS_KEY_PASSWORD --operation opt-in --socket "$NODE_HOSTNAME:$NODE_DISPERSAL_PORT;$NODE_RETRIEVAL_PORT" --quorum-id-list $NODE_QUORUM; fi',
             ]
           volumeMounts:
+            - name: eigenda-g1
+              mountPath: /app/g1
+            - name: eigenda-g2
+              mountPath: /app/g2
+            - name: eigenda-cache
+              mountPath: /app/cache
+            - name: eigenda-db
+              mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
 
 
       volumes:
+        - name: eigenda-g1
+          persistentVolumeClaim:
+            claimName: {{ include "eigenda.fullname" . }}-g1
+        - name: eigenda-g2
+          persistentVolumeClaim:
+            claimName: {{ include "eigenda.fullname" . }}-g2
+        - name: eigenda-cache
+          persistentVolumeClaim:
+            claimName: {{ include "eigenda.fullname" . }}-cache
+        - name: eigenda-database
+          persistentVolumeClaim:
+            claimName: {{ include "eigenda.fullname" . }}-database
           {{- with .Values.volumes }}
           {{- toYaml . | nindent 8 }}
           {{- end }}
