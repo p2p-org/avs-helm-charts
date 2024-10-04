@@ -1,0 +1,199 @@
+nameOverride: ""
+fullnameOverride: ""
+
+labels: {}
+
+configs:
+  isNeedOptIn: true
+  quorum: "0"
+  eigendaServiceManager: "0xD4A7E1Bd8015057293f0D0A557088c286942e84b"
+  blsOperatorStateRetriever: "0xB4baAfee917fb4449f5ec64804217bccE9f46C67"
+  churnerUrl: "churner-holesky.eigenda.xyz:443"
+  nodeHostName: "eigenda-holesky.el.p2p.world"
+  nodeChainRPC: "https://ethereum-holesky-rpc.publicnode.com"
+  nodeChainID: "17000"
+
+volumes:
+  - name: ecdsa-key
+    secret:
+      secretName: p2p-operator-key
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: bls-key
+    secret:
+      secretName: eigenda-bls-key
+      items:
+        - key: bls-private-key
+          path: bls_key.json
+  - name: eigenda-g1
+    persistentVolumeClaim:
+      claimName: eigenda-g1
+  - name: eigenda-g2
+    persistentVolumeClaim:
+      claimName: eigenda-g2
+  - name: eigenda-cache
+    persistentVolumeClaim:
+      claimName: eigenda-cache
+  - name: eigenda-database
+    persistentVolumeClaim:
+      claimName: eigenda-database
+
+pvc:
+  g1:
+    size: 10Gi
+    storageClassName: default
+    annotations: {}
+    labels: {}
+  g2:
+    size: 1Gi
+    storageClassName: default
+    annotations: {}
+    labels: {}
+  cache:
+    size: 1Gi
+    storageClassName: default
+    annotations: {}
+    labels: {}
+  database:
+    size: 4Ti
+    storageClassName: default
+    annotations: {}
+    labels: {}
+
+imagePullSecrets: []
+
+service:
+  reservedPublicIP: 1.1.1.1
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "nlb"
+    oci-network-load-balancer.oraclecloud.com/security-list-management-mode: "All"
+    oci.oraclecloud.com/security-rule-management-mode: "SL-All"
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 32004
+      targetPort: retrieval-port
+      name: eigenda-retrieval-port
+    - protocol: TCP
+      port: 32005
+      targetPort: dispersal-port
+      name: eigenda-dispersal-port
+    - protocol: TCP
+      port: 9092
+      targetPort: metrics
+      name: eigenda-metrics
+
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+nodeShell:
+  enabled: true
+  image:
+    repository: ghcr.io/layr-labs/eigenda/opr-node
+    pullPolicy: IfNotPresent
+    tag: ""
+  resources: {}
+  command:
+    - sleep
+  args:
+    - infinity
+
+optIn:
+  image:
+    repository: ghcr.io/layr-labs/eigenda/opr-nodeplugin
+    pullPolicy: IfNotPresent
+    tag: ""
+busybox:
+  image:
+    repository: busybox
+    pullPolicy: IfNotPresent
+    tag: "1.28"
+node:
+  envFrom:
+    - configMapRef:
+        name: eigenda-config
+  env:
+    - name: NODE_ECDSA_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: p2p-operator-key
+          key: ecdsa-private-key-password
+    - name: NODE_BLS_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: eigenda-bls-key
+          key: bls-private-key-password
+  volumeMounts: []
+  image:
+    repository: ghcr.io/layr-labs/eigenda/opr-node
+    pullPolicy: IfNotPresent
+    tag: ""
+  ports:
+    - containerPort: 32004
+      name: retrieval-port
+      protocol: TCP
+    - containerPort: 32005
+      name: dispersal-port
+      protocol: TCP
+    - name: metrics
+      containerPort: 9092
+      protocol: TCP
+  resources:
+    limits:
+      cpu: 2
+      memory: 20Gi
+    requests:
+      cpu: 2
+      memory: 20Gi
+  # readinessProbe:
+  #   tcpSocket:
+  #     port: 9092
+  #   initialDelaySeconds: 10
+  #   periodSeconds: 5
+  #   timeoutSeconds: 1
+  #   successThreshold: 1
+  #   failureThreshold: 3
+  # livenessProbe:
+  #   httpGet:
+  #     path: /metrics
+  #     port: 9092
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+
+vmPodScrape:
+  enabled: false
