@@ -63,11 +63,8 @@ pvc:
 imagePullSecrets: []
 
 service:
-  reservedPublicIP: 1.1.1.1
-  annotations:
-    oci.oraclecloud.com/load-balancer-type: "nlb"
-    oci-network-load-balancer.oraclecloud.com/security-list-management-mode: "All"
-    oci.oraclecloud.com/security-rule-management-mode: "SL-All"
+  reservedPublicIP: 0.0.0.0 ## PLACEHOLDER
+  annotations: {}
   type: LoadBalancer
   ports:
     - protocol: TCP
@@ -125,7 +122,15 @@ node:
         secretKeyRef:
           name: eigenda-bls-key
           key: bls-private-key-password
-  volumeMounts: []
+  volumeMounts:
+    - name: ecdsa-key
+      mountPath: /app/operator_keys/ecdsa/ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: bls-key
+      mountPath: /app/operator_keys/bls/bls_key.json
+      subPath: bls_key.json
+      readOnly: true
   image:
     repository: ghcr.io/layr-labs/eigenda/opr-node
     pullPolicy: IfNotPresent
