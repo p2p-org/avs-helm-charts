@@ -3,9 +3,9 @@ entries:
   aethos:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-11-19T17:11:19.232970134Z"
+    created: "2024-11-19T17:12:11.842817019Z"
     description: A Helm chart for Kubernetes
-    digest: e82736c5e602678cd027bfdd4ed534d6d549f47a0a0b7c1baf34e9b95932bd6a
+    digest: ec6029002ee53d9dfeaafe38a988ad01157ac27c44373663a8c6f84c584fb0a2
     icon: https://avatars.githubusercontent.com/u/148808805?s=200&v=4
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -71,9 +71,9 @@ entries:
   arpa:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-11-19T17:11:19.233772532Z"
+    created: "2024-11-19T17:12:11.84364041Z"
     description: A Helm chart for Kubernetes
-    digest: 577f7375afcb89889bc634ab5aff792c3157f80b5bba1c1dcd3cb6e55b6a1c91
+    digest: fe33d25178e61e83dcbe8f07c55cab88c46fbd317f0136cb2c129e1d8ee6d77b
     icon: https://avatars.githubusercontent.com/u/95603114?s=200&v=4
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -126,9 +126,9 @@ entries:
   ava:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2024-11-19T17:11:19.234338035Z"
+    created: "2024-11-19T17:12:11.844220279Z"
     description: A Helm chart for Kubernetes
-    digest: 656822d59554e7975515ccee0020ec36e370e2ca5d78ee9ae4a8c312be3cf0af
+    digest: cc43dbdc330b6caeda2f0c4f020ba5079ceb173a67eeb2b3bbb7b5b9cdf21b94
     icon: https://avatars.githubusercontent.com/u/42079491?s=200&v=4
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -141,9 +141,9 @@ entries:
   k3:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-11-19T17:11:19.234877008Z"
+    created: "2024-11-19T17:12:11.844813171Z"
     description: A Helm chart for Kubernetes
-    digest: 8a23130aca98f5d7c77c458febd56827ed9174ac99f44c836eaf02107b40b2c8
+    digest: cceaf00b5652fd03100f039986d3cabb861d37ddceee96bcc13f3dca8b48a7a2
     icon: https://avatars.githubusercontent.com/u/143101892?s=200&v=4
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -211,9 +211,9 @@ entries:
   lagrange:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-11-19T17:11:19.235396865Z"
+    created: "2024-11-19T17:12:11.845327147Z"
     description: A Helm chart for Kubernetes
-    digest: 77118ba2f6c4af5f7cdf3b41816a9d817e7bfe0f07a12ad7a8386c74d72de322
+    digest: 46a8c46cc038879e455ad3b37e2a7de095f8562c8b2483fc6f27ce7e7cbff247
     maintainers:
     - email: aleksei.lazarev@p2p.org
       name: xom4ek
@@ -238,9 +238,9 @@ entries:
   openoracle:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2024-11-19T17:11:19.236283801Z"
+    created: "2024-11-19T17:12:11.845922094Z"
     description: A Helm chart for Kubernetes
-    digest: fc9ee552cbb960df83a1d9f5b956491959e5351fda8c4ead6895de7d7f46bb6e
+    digest: 2440847e7e3590ea68fa14be7b783fc7e8fe66ece40d7cfee1bad5c527555a3d
     icon: https://storage.googleapis.com/stakingrewards-static/images/assets/production/openlayer_logo.png?v=1715247060260
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -294,9 +294,9 @@ entries:
   radius:
   - apiVersion: v2
     appVersion: "0.4"
-    created: "2024-11-19T17:11:19.237361893Z"
+    created: "2024-11-19T17:12:11.846587922Z"
     description: A Helm chart for Kubernetes
-    digest: 4587227b5509896a01ed5a98fa51e7cc7171799ba825446305ba760a9bb454d5
+    digest: 7b5c01e5e3e8fc875d1302efe3d8284c8f1cf0cb1c72198430bf54136b50f44f
     icon: https://avatars.githubusercontent.com/u/98524494?s=200&v=4
     maintainers:
     - email: aleksei.lazarev@p2p.org
@@ -306,4 +306,4 @@ entries:
     urls:
     - https://p2p-org.github.io/avs-helm-charts/radius-0.1.0.tgz
     version: 0.1.0
-generated: "2024-11-19T17:11:19.231650795Z"
+generated: "2024-11-19T17:12:11.841302652Z"
