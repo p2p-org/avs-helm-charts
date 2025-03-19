@@ -1,0 +1,131 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+labels: {}
+
+pvc:
+  size: 10Gi
+  storageClassName: ""
+  labesl: {}
+  annotations: {}
+imagePullSecrets: []
+service:
+  annotations: {}
+  type: LoadBalancer
+  ports:
+    - name: node-api
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: task-server
+      port: 9010
+      protocol: TCP
+      targetPort: 9010
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+configs:
+  operator.yaml: |
+    https://github.com/predicateNetwork/predicate-operator
+
+register:
+  image:
+    repository: ghcr.io/predicatelabs/operator
+    pullPolicy: Always
+    tag: "v1.0.5"
+  args:
+    - register
+    - --config=/app/config/operator.yaml
+    - --skip-middleware-health-check
+
+node:
+  &node
+  volumeMounts: []
+  image:
+    repository: ghcr.io/predicatelabs/operator
+    pullPolicy: Always
+    tag: "v1.0.5"
+  ports:
+    - name: node-api
+      containerPort: 8080
+      protocol: TCP
+    - name: metrics
+      containerPort: 9090
+      protocol: TCP
+    - name: task-server
+      containerPort: 9010
+      protocol: TCP
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 2
+      memory: 8Gi
+  env: []
+  args:
+    - start
+    - --config=/app/config/operator.yaml
+  readinessProbe: {}
+  #   httpGet:
+  #     path: /metrics
+  #     port: 9090
+  #   initialDelaySeconds: 30
+  #   periodSeconds: 10
+  #   timeoutSeconds: 3
+  #   failureThreshold: 3
+  #   successThreshold: 1
+  livenessProbe: {}
+  #   httpGet:
+  #     path: /metrics
+  #     port: 9090
+  #   initialDelaySeconds: 1200
+  #   periodSeconds: 30
+  #   timeoutSeconds: 3
+  #   failureThreshold: 2
+  #   successThreshold: 1
+
+shell:
+  <<: *node
+  command: ["/bin/sh", "-c"]
+  args:
+    - while true; do sleep 10000; done
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+volumes: []
+vmPodScrape:
+  enabled: true
