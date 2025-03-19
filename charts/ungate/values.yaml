@@ -1,0 +1,127 @@
+common:
+  &common
+  command: []
+  args: []
+  image:
+    repository: xom4ekp2p/infini-route-attestators-public-mainnet-attester
+  initContainer:
+    env:
+      - name: ECDSA_KEY_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "p2p-operator-key"
+            key: "ecdsa-private-key-password"
+      - name: AVS_GOVERNANCE_ADDRESS
+        value: "0xB3e069FD6dDA251AcBDE09eDa547e0AB207016ee"
+      - name: ATTESTATION_CENTER_ADDRESS
+        value: "0x43042F34e8F9B093AD579f4aEc9915476408586E"
+      - name: OPERATOR_ADDRESS
+        value: "0xdbed88d83176316fc46797b43adee927dc2ff2f5"
+      - name: OTHENTIC_BOOTSTRAP_ID
+        value: 12D3KooWBNFG1QjuF3UKAKvqhdXcxh9iBmj88cM5eU2EK5Pa91KB
+      - name: IPFS_HOST
+        value: https://gateway.lighthouse.storage/ipfs/
+
+    enabled: true
+    image:
+      repository: ghcr.io/foundry-rs/foundry
+      pullPolicy: IfNotPresent
+      tag: "latest"
+    command:
+      - /bin/sh
+    args:
+      - -c
+      - 'PRIVATE_KEY_ATTESTER=$(cast wallet dk -k /operator_keys --unsafe-password $ECDSA_KEY_PASSWORD ecdsa_key.json); echo ${PRIVATE_KEY_ATTESTER: -64} > /emptydir/PRIVATE_KEY_ATTESTER'
+    volumeMounts:
+      - name: ecdsa-key
+        mountPath: /operator_keys/ecdsa_key.json
+        subPath: ecdsa_key.json
+        readOnly: true
+      - name: emptydir
+        mountPath: /emptydir
+  volumeMounts:
+    - name: ecdsa-key
+      mountPath: /operator_keys/ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: emptydir
+      mountPath: /emptydir
+  env:
+    - name: AVS_GOVERNANCE_ADDRESS
+      value: "0xB3e069FD6dDA251AcBDE09eDa547e0AB207016ee"
+    - name: ATTESTATION_CENTER_ADDRESS
+      value: "0x43042F34e8F9B093AD579f4aEc9915476408586E"
+    - name: OPERATOR_ADDRESS
+      value: "0xdbed88d83176316fc46797b43adee927dc2ff2f5"
+    - name: OTHENTIC_BOOTSTRAP_ID
+      value: 12D3KooWBNFG1QjuF3UKAKvqhdXcxh9iBmj88cM5eU2EK5Pa91KB
+    - name: IPFS_HOST
+      value: https://gateway.lighthouse.storage/ipfs/
+
+attester:
+  <<: *common
+  image:
+    repository: xom4ekp2p/infini-route-attestators-public-mainnet-attester
+  command: ["/bin/sh", "-c"]
+  args:
+    - node attester /ip4/198.13.35.119/tcp/9876/p2p/${OTHENTIC_BOOTSTRAP_ID} --avs-webapi http://localhost --l1-chain "mainnet" --l2-chain "base"
+    
+  
+shell:
+  <<: *common
+  image:
+    repository: xom4ekp2p/infini-route-attestators-public-mainnet-attester
+  command: ["/bin/sh", "-c"]
+  args:
+    - while true; do sleep 10000; done
+
+avswebapi:
+  <<: *common
+  image:
+    repository: docker.io/xom4ekp2p/infini-route-attestators-public-mainnet-avs-webapi
+
+register:
+  <<: *common
+  image:
+    repository: xom4ekp2p/infini-route-attestators-public-mainnet-attester
+  enabled: false
+
+ingress:
+  annotations: {}
+  enabled: false
+  host: ungate-maiinet.el.test.world
+
+serviceAccount:
+  create: false
+  name: ungate
+
+
+service:
+  annotations: {}
+  type: ClusterIP
+  ports:
+    - name: avswebapi
+      port: 4002
+      protocol: TCP
+      targetPort: 4002
+    - name: avswebapi-http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+
+volumes:
+  - name: ecdsa-key
+    secret:
+      secretName: p2p-operator-key
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: emptydir
+    emptyDir: {}
+
+configs:
+  node.yaml: |
+    ## nothing
+
+vmPodScrape:
+  enabled: false
