@@ -9,7 +9,7 @@ configs:
   eigendaServiceManager: "0xD4A7E1Bd8015057293f0D0A557088c286942e84b"
   blsOperatorStateRetriever: "0xB4baAfee917fb4449f5ec64804217bccE9f46C67"
   churnerUrl: "churner-holesky.eigenda.xyz:443"
-  nodeHostName: "eigenda-holesky.el.p2p.world"
+  nodeHostName: "eigenda-holesky.el.yourdomain.com"
   nodeChainRPC: "https://ethereum-holesky-rpc.publicnode.com"
   nodeChainID: "17000"
 
@@ -64,8 +64,11 @@ pvc:
 imagePullSecrets: []
 
 service:
-  reservedPublicIP: 0.0.0.0 ## PLACEHOLDER
-  annotations: {}
+  reservedPublicIP: 1.1.1.1
+  annotations:
+    # oci.oraclecloud.com/load-balancer-type: "nlb"
+    # oci-network-load-balancer.oraclecloud.com/security-list-management-mode: "All"
+    # oci.oraclecloud.com/security-rule-management-mode: "SL-All"
   type: LoadBalancer
   ports:
     - protocol: TCP
@@ -123,15 +126,7 @@ node:
         secretKeyRef:
           name: eigenda-bls-key
           key: bls-private-key-password
-  volumeMounts:
-    - name: ecdsa-key
-      mountPath: /app/operator_keys/ecdsa/ecdsa_key.json
-      subPath: ecdsa_key.json
-      readOnly: true
-    - name: bls-key
-      mountPath: /app/operator_keys/bls/bls_key.json
-      subPath: bls_key.json
-      readOnly: true
+  volumeMounts: []
   image:
     repository: ghcr.io/layr-labs/eigenda/opr-node
     pullPolicy: IfNotPresent

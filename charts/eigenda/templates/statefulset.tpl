@@ -68,7 +68,7 @@ spec:
               mountPath: /app/g2
             - name: eigenda-cache
               mountPath: /app/cache
-            - name: eigenda-db
+            - name: eigenda-database
               mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
@@ -117,7 +117,7 @@ spec:
               mountPath: /app/g2
             - name: eigenda-cache
               mountPath: /app/cache
-            - name: eigenda-db
+            - name: eigenda-database
               mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
@@ -140,7 +140,7 @@ spec:
               mountPath: /app/g2
             - name: eigenda-cache
               mountPath: /app/cache
-            - name: eigenda-db
+            - name: eigenda-database
               mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
@@ -160,7 +160,7 @@ spec:
               mountPath: /app/g2
             - name: eigenda-cache
               mountPath: /app/cache
-            - name: eigenda-db
+            - name: eigenda-database
               mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}
@@ -190,7 +190,7 @@ spec:
               mountPath: /app/g2
             - name: eigenda-cache
               mountPath: /app/cache
-            - name: eigenda-db
+            - name: eigenda-database
               mountPath: /data/operator/db
           {{- with .Values.node.volumeMounts }}
           {{- toYaml . | nindent 12 }}

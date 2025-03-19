@@ -26,18 +26,6 @@ volumes:
       items:
         - key: bls-private-key
           path: bls_key.json
-  - name: eigenda-g1
-    persistentVolumeClaim:
-      claimName: eigenda-g1
-  - name: eigenda-g2
-    persistentVolumeClaim:
-      claimName: eigenda-g2
-  - name: eigenda-cache
-    persistentVolumeClaim:
-      claimName: eigenda-cache
-  - name: eigenda-database
-    persistentVolumeClaim:
-      claimName: eigenda-database
 
 pvc:
   g1:
@@ -109,11 +97,9 @@ busybox:
     pullPolicy: IfNotPresent
     tag: "1.28"
 node:
-  envFrom:
-    - configMapRef:
-        name: eigenda-config
   command: ""
   args: ""
+  envFrom: []
   env:
     - name: NODE_ECDSA_KEY_PASSWORD
       valueFrom:
