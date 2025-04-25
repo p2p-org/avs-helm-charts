@@ -1,0 +1,233 @@
+# Default values for automata.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+labels: {}
+
+image:
+  repository: ghcr.io/automata-network/multi-prover-avs/operator
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v0.6.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: automata
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  # annotations:
+  #   oci.oraclecloud.com/load-balancer-type: "nlb"
+  #   oci-network-load-balancer.oraclecloud.com/security-list-management-mode: "All"
+  #   oci.oraclecloud.com/security-rule-management-mode: "SL-All"
+  # type: LoadBalancer
+  ports:
+    - name: node-api
+      port: 50061
+      protocol: TCP
+      targetPort: 50061
+    - name: metrics
+      port: 50081
+      protocol: TCP
+      targetPort: 50081
+
+configs:
+  operator.json: |
+    {
+    "BlsKeyFile": "/operator_keys/bls_key.json",
+    "BlsKeyPassword": "",
+    "ProverURL": "https://avs-prover-mainnet1.ata.network:18232",
+    "ETHRpcURL": "https://ethereum-rpc.publicnode.com",
+    "AggregatorURL": "https://avs-aggregator.ata.network",
+    "EigenMetricsIpPortAddress": "0.0.0.0:15682",
+    "NodeApiIpPortAddress": "0.0.0.0:15693",
+    "AttestationLayerRpcURL": "https://ethereum-rpc.publicnode.com",
+    "AttestationLayerEcdsaKey": "",
+    "RegistryCoordinatorAddress": "0x414696E4F7f06273973E89bfD3499e8666D63Bd4",
+    "TEELivenessVerifierAddress": "0x99886d5C39c0DF3B0EAB67FcBb4CA230EF373510"
+    }
+
+initContainer:
+  image:
+    repository: ghcr.io/foundry-rs/foundry
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  volumeMounts:
+    - name: ecdsa-key
+      mountPath: /operator_keys/ecdsa_key.json
+      subPath: ecdsa_key.json
+      readOnly: true
+    - name: bls-key
+      mountPath: /operator_keys/bls_key.json
+      subPath: bls_key.json
+      readOnly: true
+    - name: automata-config
+      mountPath: /tmpl/operator-tmpl.json
+      subPath: operator.json
+    - name: automata-workdir
+      mountPath: /config
+  env:
+    - name: ECDSA_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "ecdsa-key"
+          key: "ecdsa-private-key-password"
+    - name: BLS_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "bls-key"
+          key: "bls-private-key-password"
+  command:
+    - /bin/sh
+  args:
+    - -c
+    - "ECDSA_PRIVATE_KEY=$(cast wallet dk -k /operator_keys --unsafe-password $ECDSA_KEY_PASSWORD ecdsa_key.json); cp /tmpl/operator-tmpl.json /config/operator.json && sed -i \"s/\\\"BlsKeyPassword\\\": \\\"\\\"/\\\"BlsKeyPassword\\\": \\\"${BLS_KEY_PASSWORD}\\\"/g\" /config/operator.json && sed -i \"s/\\\"AttestationLayerEcdsaKey\\\": \\\"\\\"/\\\"AttestationLayerEcdsaKey\\\": \\\"${ECDSA_PRIVATE_KEY: -64}\\\"/g\" /config/operator.json"
+
+node:
+  volumeMounts:
+    - name: bls-key
+      mountPath: /operator_keys/bls_key.json
+      subPath: bls_key.json
+      readOnly: true
+    - name: automata-workdir
+      mountPath: /config
+  ports:
+    - name: node-api
+      containerPort: 15693
+      protocol: TCP
+    - name: metrics
+      containerPort: 15682
+      protocol: TCP
+  resources:
+    requests:
+      cpu: 4
+      memory: 8Gi
+  env:
+    - name: BLS_KEY_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: "bls-key"
+          key: "bls-private-key-password"
+  command:
+    - /bin/sh
+  args:
+    - -c
+    - operator -c /config/operator.json
+  readinessProbe:
+    httpGet:
+      path: /metrics
+      port: 15682
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+vmPodScrape:
+  enabled: true
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  # httpGet:
+  #   path: /
+  #   port: http
+readinessProbe:
+  # httpGet:
+  #   path: /
+  #   port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes:
+  - name: automata-config
+    configMap:
+      name: automata-config
+  - name: bls-key
+    secret:
+      secretName: bls-key
+      items:
+        - key: bls-private-key
+          path: bls_key.json
+  - name: ecdsa-key
+    secret:
+      secretName: ecdsa-key
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: automata-workdir
+    emptyDir: {}
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
