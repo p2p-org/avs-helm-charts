@@ -1,0 +1,3 @@
+- schema.sql  manual acctions
+- register manual?? need automatization
+- pass postgresqlsecret as secret ref?? 

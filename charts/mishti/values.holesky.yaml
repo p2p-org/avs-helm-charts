@@ -1,0 +1,61 @@
+imagePullSecrets:
+  - name: xom4ekp2p-mishtinetwork
+
+common:
+  &common
+  image:
+    repository: mishtinetwork/operator
+  volumeMounts:
+    - name: emptydir
+      mountPath: /emptydir
+  env:
+    - name: RUST_BACKTRACE
+      value: "1"
+    - name: RELAYER_SIGNING_KEY
+      value: "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    - name: RSA_SEED
+      value: "e543381c652cd2a3ff997f763411b5c72d69a7f6374656974d58c4fd06cbe569"
+    - name: SECP256K1_SEED
+      value: "4143a0045db5ae67a4526e2973e0de80af80c1a2067b3ae21c4d9cfa390c5e15"
+    - name: L1_RPC
+      value: "https://lb.drpc.org/ogrpc?network=holesky&dkey="
+    - name: L2_RPC
+      value: "https://lb.drpc.org/ogrpc?network=polygon-amoy&dkey="
+    - name: REDIS_URL
+      value: "redis://0.0.0.0"
+    - name: RELAYER_IP
+      value: "100.27.208.30"
+    - name: PINATA_API_KEY
+      value: ""
+    - name: PINATA_SECRET_API_KEY
+      value: ""
+    - name: IPFS_HOST
+      value: "https://othentic.mypinata.cloud/ipfs/"
+    - name: OTHENTIC_AGGREGATOR_URI
+      value: "http://100.27.208.30"
+    - name: NODE_MULTIADDR
+      value: "/ip4/84.235.174.44/udp/8080/quic-v1"
+    - name: RPCADDR
+      value: http://84.235.174.44:8080
+    - name: OTHENTIC_RPC_IP
+      value: ""
+    - name: OTHENTIC_RPC_URL
+      value: ""
+    - name: TASK_PERFORMER
+      value: ""
+    - name: OTHENTIC_REGISTRY_ADDRESS
+      value: ""
+    - name: AVS_GOVERNANCE_ADDRESS
+      value: ""
+    - name: ATTESTATION_CENTER_ADDRESS
+      value: ""
+    - name: OTHENTIC_BOOTSTRAP_ID
+      value: ""
+    - name: OTHENTIC_BOOTSTRAP_SEED
+      value: "5acbacaf9292f058aecbfb47d2da1861ff928b45ec0a807c55940a286a95da0d"
+
+
+
+serviceAccount:
+  create: false
+  name: "mishti"

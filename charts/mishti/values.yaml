@@ -1,0 +1,194 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+labels: {}
+
+imagePullSecrets: []
+service:
+  annotations: {}
+  type: LoadBalancer
+  ports:
+    - name: aggregator
+      port: 8545
+      protocol: TCP
+      targetPort: 8545
+    - name: aggregator-rpc
+      port: 9876
+      protocol: TCP
+      targetPort: 9876
+    - name: prover
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: prover
+      port: 8080
+      protocol: UDP
+      targetPort: 8080
+    - name: relay
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+ingress:
+  annotations: {}
+  enabled: false
+  host: example.com
+
+configs:
+  operator.yaml: |
+    leave empty
+
+common:
+  &common
+  image:
+    repository: mishtinetwork/operator
+  initContainer:
+    image:
+      repository: ghcr.io/foundry-rs/foundry
+      pullPolicy: IfNotPresent
+      tag: "latest"
+    volumeMounts:
+      - name: ecdsa-key
+        mountPath: /operator_keys/ecdsa_key.json
+        subPath: ecdsa_key.json
+        readOnly: true
+      - name: emptydir
+        mountPath: /emptydir
+    env:
+      - name: ECDSA_KEY_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "your-secrets"
+            key: "ecdsa-private-key-password"
+    command:
+      - /bin/sh
+    args:
+      - -c
+      - 'ECDSA_PRIVATE_KEY=$(cast wallet dk -k /operator_keys --unsafe-password $ECDSA_KEY_PASSWORD ecdsa_key.json); echo ${ECDSA_PRIVATE_KEY: -64} > /emptydir/ECDSA_PRIVATE_KEY'
+  volumeMounts:
+    - name: emptydir
+      mountPath: /emptydir
+  ports: []
+  env:
+    - name: RELAYER_SIGNING_KEY
+      value: "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+    - name: RSA_SEED
+      value: "e543381c652cd2a3ff997f763411b5c72d69a7f6374656974d58c4fd06cbe569"
+    - name: SECP256K1_SEED
+      value: "4143a0045db5ae67a4526e2973e0de80af80c1a2067b3ae21c4d9cfa390c5e15"
+    - name: L1_RPC
+      value: "https://lb.drpc.org/ogrpc?network=holesky&dkey="
+    - name: L2_RPC
+      value: "https://lb.drpc.org/ogrpc?network=polygon-amoy&dkey="
+    - name: REDIS_URL
+      value: "redis://0.0.0.0"
+    - name: RELAYER_IP
+      value: "100.27.208.30"
+    - name: PINATA_API_KEY
+      value: "123"
+    - name: PINATA_SECRET_API_KEY
+      value: "123"
+    - name: IPFS_HOST
+      value: "https://othentic.mypinata.cloud/ipfs/"
+    - name: OTHENTIC_AGGREGATOR_URI
+      value: "http://100.27.208.30"
+    - name: NODE_MULTIADDR
+      value: /ip4/84.235.174.44/udp/8080/quic-v1 ##EXTERNAL IP AND PORT
+    - name: RPCADDR
+      value: http://84.235.174.44:8080
+    - name: OTHENTIC_RPC_IP
+      value: ""
+    - name: OTHENTIC_RPC_URL
+      value: ""
+    - name: TASK_PERFORMER
+      value: ""
+    - name: OTHENTIC_REGISTRY_ADDRESS
+      value: ""
+    - name: AVS_GOVERNANCE_ADDRESS
+      value: ""
+    - name: ATTESTATION_CENTER_ADDRESS
+      value: ""
+    - name: OTHENTIC_BOOTSTRAP_ID
+      value: ""
+    - name: OTHENTIC_BOOTSTRAP_SEED
+      value: "5acbacaf9292f058aecbfb47d2da1861ff928b45ec0a807c55940a286a95da0d"
+
+register:
+  <<: *common
+  enabled: false
+  command: ["/bin/sh", "-c"]
+  args:
+    - export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && ./registry_iface register --rpc-url $L1_RPC --private-key $PRIVATE_KEY --multiaddr $NODE_MULTIADDR --rpcaddr $RPCADDR
+
+prover:
+  <<: *common
+  command: ["/bin/sh", "-c"]
+  args:
+    - |
+      export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && redis-server --daemonize yes; ./mishti_node --bootstrap-peer-id 16Uiu2HAm3n6sZQM9C4YvjnEMTXJ9EjRXDH9Aa8WAJQir72cvstBW --bootstrap-multiaddr /ip4/100.27.208.30/udp/8080/quic-v1 --relay-peer-id 16Uiu2HAkua1vHg92MWXPx35FtA8neV6fyHsYZgoNmS825qWjUyBQ --relay-multiaddr /ip4/100.27.208.30/udp/8081/quic-v1 --port 8080 --redis redis://127.0.0.1:6379/0 | bunyan
+
+relay:
+  <<: *common
+  command: ["/bin/sh", "-c"]
+  args:
+    - |
+      export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && redis-server --daemonize yes; ./mishti_node --bootstrap-peer-id 16Uiu2HAm3n6sZQM9C4YvjnEMTXJ9EjRXDH9Aa8WAJQir72cvstBW --bootstrap-multiaddr /ip4/100.27.208.30/udp/8080/quic-v1 --relay-peer-id 16Uiu2HAkua1vHg92MWXPx35FtA8neV6fyHsYZgoNmS825qWjUyBQ --relay-multiaddr /ip4/100.27.208.30/udp/8081/quic-v1 --port 9090 --redis redis://127.0.0.1:6379/0 | bunyan
+
+verifier:
+  <<: *common
+  command: ["/bin/sh", "-c"]
+  args:
+    - export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && redis-server --daemonize yes; ./verifier
+
+attester:
+  <<: *common
+  command: ["/bin/sh", "-c"]
+  args:
+    - export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && othentic-cli node attester /ip4/100.27.208.30/tcp/9876/p2p/12D3KooWCvMcbwgVsf6TgCGLN5o64WBWrJnuZLJYizy4hHkRAma5 --avs-webapi http://0.0.0.0
+
+aggregator:
+  <<: *common
+  command: ["/bin/sh", "-c"]
+  args:
+    - export PRIVATE_KEY=$(cat /emptydir/ECDSA_PRIVATE_KEY) && othentic-cli node aggregator --json-rpc
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  #
+volumes:
+  - name: ecdsa-key
+    secret:
+      secretName: your-secrets
+      items:
+        - key: ecdsa-private-key
+          path: ecdsa_key.json
+  - name: emptydir
+    emptyDir: {}
+
+vmPodScrape:
+  enabled: false

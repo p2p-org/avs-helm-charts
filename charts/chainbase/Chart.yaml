@@ -1,0 +1,15 @@
+apiVersion: v2
+appVersion: v0.2.3
+description: A Helm chart for Kubernetes
+name: chainbase
+type: application
+version: 0.1.0
+maintainers:
+  - name: xom4ek
+    email: aleksei.lazarev@p2p.org
+icon: https://avatars.githubusercontent.com/u/96564783?s=200&v=4
+dependencies:
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 16.2.1
+  condition: postgresql.enabled

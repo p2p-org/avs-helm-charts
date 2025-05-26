@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: latest
+description: A Helm chart for Kubernetes
+name: mishti
+type: application
+version: 0.1.0
+maintainers:
+  - name: xom4ek
+    email: aleksei.lazarev@p2p.org
+icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCO0zjEqlhvdH6qLjbmvTs8LHPntOAyUCrjQ&s

@@ -1,0 +1,1 @@
+https://github.com/Eoracle/Eoracle-operator-setup/blob/main/data-validator/.example_env
