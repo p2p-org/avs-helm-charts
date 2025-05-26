@@ -16,7 +16,7 @@ configs:
 volumes:
   - name: ecdsa-key
     secret:
-      secretName: p2p-operator-key
+      secretName: your-secrets
       items:
         - key: ecdsa-private-key
           path: ecdsa_key.json
@@ -119,7 +119,7 @@ node:
     - name: NODE_ECDSA_KEY_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: p2p-operator-key
+          name: your-secrets
           key: ecdsa-private-key-password
     - name: NODE_BLS_KEY_PASSWORD
       valueFrom:

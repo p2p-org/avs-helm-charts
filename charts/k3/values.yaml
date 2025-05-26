@@ -45,7 +45,7 @@ register:
       - date
   enabled: true
   image:
-    repository: k3official/k3-labs-avs-operator
+    repository: mirror.gcr.io/k3official/k3-labs-avs-operator
     pullPolicy: Always
     tag: "latest"
 
@@ -64,7 +64,7 @@ node:
 
   volumeMounts: []
   image:
-    repository: k3official/k3-labs-avs-operator
+    repository: mirror.gcr.io/k3official/k3-labs-avs-operator
     pullPolicy: Always
     tag: "latest"
   ports:

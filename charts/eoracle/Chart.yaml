@@ -1,0 +1,10 @@
+apiVersion: v2
+name: eoracle
+description: A Helm chart for eOracle deployment in k8s
+version: 0.1.0
+maintainers:
+  - name: xom4ek
+    email: aleksei.lazarev@p2p.org
+icon: https://mainnet-ethereum-avs-metadata.s3.amazonaws.com/0x23221c5bb90c7c57ecc1e75513e2e4257673f0ef/logo.png
+type: application
+appVersion: "v0.1.47"

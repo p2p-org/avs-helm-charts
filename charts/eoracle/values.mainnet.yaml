@@ -1,0 +1,6 @@
+namespace: "p2p-eoracle-mainnet"
+chain: mainnet
+
+volumes: []
+
+volumeMounts: []

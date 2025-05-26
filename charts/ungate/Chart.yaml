@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: 0.8.4
+appVersion: latest
 description: A Helm chart for Kubernetes
-name: eigenda
+name: ungate
 type: application
-version: 0.1.1
-icon: https://avatars.githubusercontent.com/u/92827658?s=200&v=4
+version: 0.1.0
 maintainers:
   - name: xom4ek
     email: aleksei.lazarev@p2p.org
+icon: https://avatars.githubusercontent.com/u/143101892?s=200&v=4

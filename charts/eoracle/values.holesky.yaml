@@ -1,0 +1,6 @@
+namespace: "p2p-eoracle-holesky"
+chain: holesky
+
+volumes: []
+
+volumeMounts: []

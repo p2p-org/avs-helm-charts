@@ -1,0 +1,16 @@
+chain: mainnet
+vaultSecretPath:
+  enabled: true
+image:
+  repository: mirror.gcr.io/eoracle/data-validator
+  pullPolicy: IfNotPresent
+  tag: v0.1.47
+
+configMap:
+  jsonRPCEndpoint: "https://rpc.eoracle.network"
+  jsonWSEndpoint: "wss://rpc.eoracle.network/ws"
+  registryCoordinator: "0x757E6f572AfD8E111bD913d35314B5472C051cA8"
+  stakeRegitry: "0x761DF0e99160a4bd19391475D2a1101eaab20F24"
+  configAddress: "0x05a6f762f64Ac2ccE0588677317a0Ed8af9d0c16"
+  aggregatorAddress: "0x4E70004b01987B4fd7DAcab348F0B39E9AE26110"
+  ethRPC: "https://lb.drpc.org/ogrpc?network=ethereum&dkey="
