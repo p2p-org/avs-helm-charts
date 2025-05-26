@@ -65,8 +65,7 @@ attester:
   command: ["/bin/sh", "-c"]
   args:
     - node attester /ip4/198.13.35.119/tcp/9876/p2p/${OTHENTIC_BOOTSTRAP_ID} --avs-webapi http://localhost --l1-chain "mainnet" --l2-chain "base"
-    
-  
+
 shell:
   <<: *common
   image:

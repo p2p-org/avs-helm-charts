@@ -93,9 +93,9 @@ common:
     - name: OTHENTIC_AGGREGATOR_URI
       value: "http://100.27.208.30"
     - name: NODE_MULTIADDR
-      value: /ip4/84.235.174.44/udp/8080/quic-v1 ##EXTERNAL IP AND PORT
+      value: /ip4/YOUR_EXTERNAL_IP/udp/YOUR_EXTERNAL_PORT/quic-v1
     - name: RPCADDR
-      value: http://84.235.174.44:8080
+      value: http://YOUR_EXTERNAL_IP:YOUR_EXTERNAL_PORT
     - name: OTHENTIC_RPC_IP
       value: ""
     - name: OTHENTIC_RPC_URL
